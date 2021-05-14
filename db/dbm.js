@@ -170,7 +170,7 @@ dbm.prototype.select = async function (query) {
  */
 dbm.prototype.find = async function (table, column, target) {
 
-    let rows;
+    let rows = null;
 
     try {
         rows = await this.select(`SELECT count(*) FROM ${table} WHERE ${column} = '${target}'`);
@@ -182,6 +182,25 @@ dbm.prototype.find = async function (table, column, target) {
         if(!rows)  return false;
         return rows[0]['count(*)'] > 0 ? true : false;
     }
+}
+
+
+
+dbm.prototype.find_user = async function (id, password) {
+
+    let rows = null; 
+
+    try {
+        rows = await this.select(`SELECT count(*) FROM USERINFOTABLE WHERE USER_ID = ${id} AND = ${password}`);
+    }
+    catch(error) {
+        console.log(error);
+    }
+    finally {
+        if(!rows)  return false;
+        return rows[0]['count(*)'] > 0 ? true : false;
+    }
+
 }
 
 

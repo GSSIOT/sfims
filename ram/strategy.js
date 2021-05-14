@@ -1,11 +1,14 @@
 const dotenv         = require("dotenv").config({path : ".env"});
 const express        = require("express");
 const passport       = require("passport");
+const dbm            = require("../db/dbm");
 const jwt            = require("passport-jwt");
 const jwtStrategy    = require("passport-jwt").Strategy;
 const localStrategy  = require("passport-local").Strategy;
 
-function strategy(dbm) {
+
+
+function strategy() {
 
     const localConfig = {
         usernameField : "id",
@@ -31,18 +34,20 @@ function strategy(dbm) {
 
     async function localVerify(id, pw, done) {
 
-        // try {
-        //     let user = await dbm.select(QUERY, [id, pw]);  // 사용자 조회
-        //     if (!user) done(null, false, { reason: "no exist user" });
-        //     else done(null, user);
-        // }
+        const user = false;
 
-        // catch (error) {
-        //     done(error, false);
-        // }
-        console.log(id, pw);
-        if(id == "admin" && pw == "1234")  return done(null, {id, pw});;
-        done(null, false);
+        try {
+            user = await dbm.find_user(id, pw);
+        }
+
+        catch (error) {
+            done(error, false);
+        }
+
+        finally {
+            if(user)  done(null, {id, pw});
+            else      done(null, false)
+        }
     }
 
     async function jwtVerify(payload, done) {

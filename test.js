@@ -134,19 +134,32 @@
 //         if(error) console.log(error.message);
 //         console.log("body", body);
 //     })
-// // }
+// // // }
 
 
-// // setInterval(() => { test(); }, 1000);
+// // // setInterval(() => { test(); }, 1000);
 
-// // //const request = require("request");
-const request = require("request");
-const dotenv = require("dotenv").config({path:".env"});
-const payload = {
-    method : "GET",
-    url    : `http://api.openweathermap.org/data/2.5/weather?q=Goyang-si&appid=${process.env.WEATEHR_API_KEY}`
-};
-request(payload, function(error, response, body) {
-    if(error) console.log(error);
-    else console.log(JSON.parse(response.body));
-}); 
+// // // //const request = require("request");
+// const request = require("request");
+// const dotenv = require("dotenv").config({path:".env"});
+// const payload = {
+//     method : "GET",
+//     url    : `http://api.openweathermap.org/data/2.5/weather?q=Goyang-si&appid=${process.env.WEATEHR_API_KEY}`
+// };
+// request(payload, function(error, response, body) {
+//     if(error) console.log(error);
+//     else console.log(JSON.parse(response.body));
+// }); 
+
+const WebSocketServer = require("ws").Server;
+const wss = new WebSocketServer({port : 3001}, () => {console.log("wss is running")});
+
+wss.on("connection", (ws) => {
+    
+    console.log("connected");
+
+    ws.on("message", (message) => {
+        console.log("data");
+        ws.send("data");
+    })
+});
