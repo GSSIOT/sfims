@@ -191,7 +191,7 @@ dbm.prototype.find_user = async function (id, password) {
     let rows = null; 
 
     try {
-        rows = await this.select(`SELECT count(*) FROM USERINFOTABLE WHERE USER_ID = ${id} AND = ${password}`);
+        rows = await this.select(`SELECT count(*) FROM USERINFOTABLE WHERE USER_ID = '${id}' AND USER_PW = '${password}'`);
     }
     catch(error) {
         console.log(error);

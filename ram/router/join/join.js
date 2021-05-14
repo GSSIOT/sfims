@@ -25,13 +25,13 @@ function json_to_array(json) {
  */
 async function join(req, res, next) {
     
-    let userInfo = req.body.userinfo;
+    let userInfo = req.body;
     let user     = await dbm.find("USERINFOTABLE", "USER_ID", userInfo.user_id);
     let email    = await dbm.find("USERINFOTABLE", "USER_EMAIL", userInfo.user_email);
     let result   = true;
     let statusMessage;
 
-    //console.log(userInfo.id, user);
+    console.log(req.body.user_info);
 
     if(user || email) {
         statusMessage  = user  ? "ID IN USE" : "";
@@ -40,7 +40,16 @@ async function join(req, res, next) {
     }
 
     else {
-        result = await dbm.insert("INSERT INTO USERINFOTABLE VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)", json_to_array(userInfo));
+
+        userInfo.user_register   = "20210514";
+        userInfo.user_authority  = "user";
+        userInfo.user_class      = "1";
+        userInfo.last_vistit     = "20210514"
+        userInfo.user_lastaction = "join";
+
+        console.log(userInfo)
+
+        result = await dbm.insert("INSERT INTO USERINFOTABLE VALUES (?,?,?,?,?,?,?,?,?,?)", json_to_array(userInfo));
         
         if(result)  res.json(statusGen(908, "[JOIN] join success"));
         else        res.json(statusGen(907, "[JOIN] db insert failed"));

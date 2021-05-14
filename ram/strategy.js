@@ -34,16 +34,14 @@ function strategy() {
 
     async function localVerify(id, pw, done) {
 
-        const user = false;
+        let user = false;
 
         try {
             user = await dbm.find_user(id, pw);
         }
-
         catch (error) {
             done(error, false);
         }
-
         finally {
             if(user)  done(null, {id, pw});
             else      done(null, false)
@@ -52,20 +50,18 @@ function strategy() {
 
     async function jwtVerify(payload, done) {
 
-        // try {
-        //     let user = await dbm.select(QUERY, payload.id);  // 사용자 조회
-        //     if(!user)  done(null, false, {reason : "unvalid token"});
-        //     else       done(null, user);
-        // }
+        let user = false;
 
-        // catch(error) {
-        //     done(error, false);
-        // }
-
-        console.log("payload", payload);
-        if(payload.id == "admin")  return done(null, {id : payload.id});
-        done(null, false);
-
+        try {
+            user = await dbm.find("USERINFOTABLE", "USER_ID", payload.id);
+        }
+        catch(error) {
+            done(error, false);
+        }
+        finally {
+            if(!user)  done(null, false, {reason : "unvalid token"});
+            else       done(null, user);
+        }
     }
 
     passport.use("jwt",   new jwtStrategy({jwtFromRequest : cookieExtractor, secretOrKey : process.env.JWT_SECRET_KEY}, jwtVerify));
