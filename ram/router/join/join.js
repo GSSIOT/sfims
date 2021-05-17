@@ -3,7 +3,7 @@ const router    = express.Router();
 const statusGen = require("../../statusgenerator");
 const dotenv    = require("dotenv").config({path : "../../../.env"});
 const dbm       = require("../../../db/dbm");
-const logger    = require("../../../server/winston");
+const {logger}  = require("../../../server/winston");
 
 
 function json_to_array(json) {

@@ -5,7 +5,7 @@ const dbm           = require("../../../db/dbm");
 const router        = express.Router();
 const statusGen     = require("../../statusgenerator");
 const openAPI       = require("./openapi");
-const logger        = require("../../../server/winston");
+const {logger}      = require("../../../server/winston");
 
 
 
@@ -151,4 +151,7 @@ router.post("/api/authority", handle_authority_request);
 router.post("/api/env", handleEnvRequest);
 router.post("/api/dev", handleDevRequest);
 router.post("/api/user", handleUserRequest);
+
+
+
 module.exports = router;

@@ -12,10 +12,6 @@ function messageAuthentication(req, res, next) {
     let signature = req.headers['x-signature'];
 
     if(!date || !accessKey || !signature)  return res.send(statusGen(204, "Request Format Error"));
-    console.log(date);
-    console.log(accessKey);
-    console.log(signature);
-    console.log(url);
 
     if(hmac.get_signature(method, date, url) == signature) {
         next();
