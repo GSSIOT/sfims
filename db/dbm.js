@@ -2,6 +2,7 @@ const mariadb  = require("mariadb");
 const config   = require("./config");
 const math     = require("math");
 const errorGen = require("../error");
+const logger   = require("../server/winston");
 
 
 /**
@@ -21,13 +22,14 @@ function dbm () {
  */
 dbm.prototype.init = async function () {
 
-    let result;
-    //let dummy = [id];
+    logger.info("dbm.init")
 
+    let result;
+    
     this.pool = mariadb.createPool(config);
+
     try {
         this.conn = await this.pool.getConnection();
-        console.log("dbm init");
         return this.conn;
         
         // result    = await this.conn.query("INSERT ERROR", dummy);
@@ -43,7 +45,7 @@ dbm.prototype.init = async function () {
         // if(result.warningStatus)  throw new Error("DELETE ERROR");
     }
     catch(error) {
-        console.log(errorGen(error, "dbm.init( )"));
+        logger.error(error);
     }
     finally {
         this.conn.release();
@@ -57,13 +59,18 @@ dbm.prototype.init = async function () {
  */
 dbm.prototype.terminate = async function () {
 
+    logger.info("dbm.terminate");
+
     try {
         await this.pool.end();
         console.log("teminated dbm");
     }
     catch(error) {
-        error.src = "dbm.terminate( )";
-        throw error;
+        logger.error(error);
+    }
+
+    finally {
+        if(this.pool)  delete this.pool;
     }
 }
 
@@ -76,6 +83,8 @@ dbm.prototype.terminate = async function () {
  */
 dbm.prototype.insert = async function (query, value) {
 
+    logger.info("dbm.insert");
+
     let result = null;
 
     try {
@@ -83,7 +92,7 @@ dbm.prototype.insert = async function (query, value) {
         result    = await this.conn.query(query, value);
     }
     catch(error) {
-        console.log(errorGen(error, "dbm.insert()"));
+        logger.error(error.message);
     }
     finally {
         this.conn.release();
@@ -99,6 +108,8 @@ dbm.prototype.insert = async function (query, value) {
  */
 dbm.prototype.delete = async function (query) {
 
+    logger.info("dbm.delete");
+
     let result = null;
 
     try {
@@ -106,7 +117,7 @@ dbm.prototype.delete = async function (query) {
         result    = await this.conn.query(query);
     }
     catch(error) {
-        console.log(errorGen(error, "dbm.delete()"));
+        logger.error(error);
     }
     finally {
         this.conn.release();
@@ -123,6 +134,8 @@ dbm.prototype.delete = async function (query) {
  */
 dbm.prototype.update = async function (query, value) {
 
+    logger.info("dbm.update");
+
     let result = null;
 
     try {
@@ -130,7 +143,7 @@ dbm.prototype.update = async function (query, value) {
         result    = await this.conn.query(query, value);
     }
     catch(error) {
-        console.log(errorGen(error, "dbm.update()"));
+        logger.error(error);
     }
     finally {
         this.conn.release();
@@ -146,6 +159,8 @@ dbm.prototype.update = async function (query, value) {
  */
 dbm.prototype.select = async function (query) {
 
+    logger.info("dbm.select");
+
     let result = null;
 
     try {
@@ -153,13 +168,14 @@ dbm.prototype.select = async function (query) {
         result    = await this.conn.query(query);
     }
     catch(error) {
-        console.log(errorGen(error, "dbm.select()"));
+        logger.error(error);
     }
     finally {
         this.conn.release();
         return result;
     }
 }
+
 
 
 /**
@@ -170,13 +186,15 @@ dbm.prototype.select = async function (query) {
  */
 dbm.prototype.find = async function (table, column, target) {
 
+    logger.info("dbm.find");
+
     let rows = null;
 
     try {
         rows = await this.select(`SELECT count(*) FROM ${table} WHERE ${column} = '${target}'`);
     }
     catch(error) {
-        console.log(error);
+        logger.error(error);
     }
     finally {
         if(!rows)  return false;
@@ -186,7 +204,15 @@ dbm.prototype.find = async function (table, column, target) {
 
 
 
+/**
+ * 
+ * @param {*} id 
+ * @param {*} password 
+ * @returns 
+ */
 dbm.prototype.find_user = async function (id, password) {
+
+    logger.info("dbm.find_user");
 
     let rows = null; 
 
@@ -194,19 +220,25 @@ dbm.prototype.find_user = async function (id, password) {
         rows = await this.select(`SELECT count(*) FROM USERINFOTABLE WHERE USER_ID = '${id}' AND USER_PW = '${password}'`);
     }
     catch(error) {
-        console.log(error);
+        logger.error(error);
     }
     finally {
         if(!rows)  return false;
         return rows[0]['count(*)'] > 0 ? true : false;
     }
-
 }
 
 
 
-
+/**
+ * 
+ * @param {*} userId 
+ * @param {*} farmId 
+ * @returns 
+ */
 dbm.prototype.check_user_authoriy = async function (userId, farmId) {
+
+    logger.info("dbm.check_user_authority");
 
     let rows = null;
 
@@ -214,12 +246,14 @@ dbm.prototype.check_user_authoriy = async function (userId, farmId) {
         rows = await this.select(`SELECT FARM_ID FROM FARMINFOTABLE WHERE USER_ID = '${userId}'`);
     }
     catch(error) {
-        console.log(error);
+        logger.error(error);
     }
     finally {
         if(!rows)  return false;
         return rows.find(element => element['FARM_ID'] == farmId);
     }
-
 }
+
+
+
 module.exports = new dbm();

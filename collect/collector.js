@@ -4,6 +4,7 @@ const hmac     = require("./hmac");
 const dbm      = require("../db/dbm");
 const dotenv   = require("dotenv").config({path : "../.env"});
 const errorGen = require("../error");
+const logger   = require("../server/winston");
 
 
 
@@ -25,13 +26,14 @@ function collector() {
  */
 collector.prototype.init = async function () {
 
+    logger.info("collector.init");
+
     this.dbm     = dbm;
     this.bcrypt  = bcrypt;
     this.hmac    = hmac;
 
     if(!this.dbm || !this.bcrypt || !this.hmac)  return false;
     setInterval(async ()=> {await this.collect()}, 1000 * 3);
-    console.log("collector init");
 
     return true;
 }
@@ -42,6 +44,8 @@ collector.prototype.init = async function () {
  */
  collector.prototype.collect = async function () {
 
+    logger.info("collector.collect");
+    
     let farmEnv = null;
     let result  = false;
 
@@ -51,7 +55,7 @@ collector.prototype.init = async function () {
     }
     
     catch(error) {
-        console.log(error);
+        logger.error(error);
     }
 
     finally {
@@ -73,8 +77,7 @@ collector.prototype.process_RAMrequest = async function (query) {
         return await this.get_data(api);
     }
     catch(error) {
-        // log
-        throw error;
+        logger.error(error);
     }
 }
 
@@ -85,7 +88,7 @@ collector.prototype.process_RAMrequest = async function (query) {
  */
 collector.prototype.terminate = function () {
 
-    console.log("teminated collector");
+    logger.info("collector.terminate");
 }
 
 
@@ -95,6 +98,8 @@ collector.prototype.terminate = function () {
  * @param {*} form 
  */
 collector.prototype.generate_message = function (api) {
+
+    logger.info("collector.generate_message");
 
     const method    = "POST";
     const date      = Date.now().toString();
@@ -109,8 +114,6 @@ collector.prototype.generate_message = function (api) {
         json    : true 
     }
 
-    //console.log(payload)
-
     return payload;
 }
 
@@ -122,6 +125,7 @@ collector.prototype.generate_message = function (api) {
  */
 collector.prototype.standardize_data = function (farmData) {
     
+    logger.info("collector.standardize_data");
 
     let envData = [];
 
@@ -144,10 +148,13 @@ collector.prototype.get_data = function (options, api) {
 
     return new Promise((resolve, reject) => {
         
+        logger.info("collector.get_data");
+
         let payload = this.generate_message(options, api);        
 
         request(payload, function(error, response, body) {
-            if(error)  reject(errorGen(error, "get_data"));
+
+            if(error)  reject(error);
             else       resolve(body);
         });    
     })
