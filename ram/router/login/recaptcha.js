@@ -26,8 +26,8 @@ function recaptcha(req, res, next) {
 
         const success = JSON.parse(body)["success"];
 
-        if(error)     res.json(statusGen(002, `HTTP ERROR : ${error.message}`));
-        if(!success)  res.json(statusGen(104, "recaptcha authentication failed"));
+        if(error)     res.json(statusGen(002, `HTTP 통신 에러 : ${error.message}`));
+        if(!success)  res.json(statusGen(104, "리캡차 토큰 인증 실패"));
         else          next();
         
     })
