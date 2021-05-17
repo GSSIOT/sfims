@@ -5,6 +5,7 @@ const dbm           = require("../../../db/dbm");
 const router        = express.Router();
 const statusGen     = require("../../statusgenerator");
 const openAPI       = require("./openapi");
+const logger        = require("../../../server/winston");
 
 
 
@@ -16,6 +17,8 @@ const openAPI       = require("./openapi");
  */
 async function handleEnvRequest(req, res, next) {
     
+    logger.info("ram.handle_env_request");
+
     let rows   = null;
     let farmId = req.body.farm_id;
  
@@ -23,12 +26,11 @@ async function handleEnvRequest(req, res, next) {
         rows = await dbm.select(`SELECT * FROM ENVINFOTABLE WHERE FARM_ID = '${farmId}' ORDER BY TIME LIMIT 1`);
     }
     catch(error) {
-        console.log(error);
+        logger.error(error);
     }
     finally {
-        console.log(rows);
-        if(!rows)  res.send({statusCode : 300, statusMessage : "데이터 전송 성공"});
-        else       res.send({statusCode : 301, statusMessage : "데이터 전송 실패", payload : rows});
+        if(!rows)  res.send({statusCode : 300, statusMessage : "데이터 전송 실패"});
+        else       res.send({statusCode : 301, statusMessage : "데이터 전송 성공", payload : rows});
     }
 }
 
@@ -42,6 +44,8 @@ async function handleEnvRequest(req, res, next) {
  */
 async function handleDevRequest(req, res, next) {
     
+    logger.info("ram.handle_dev_request");
+
     let rows   = null;
     let farmId = req.body.farm_id;
  
@@ -50,11 +54,11 @@ async function handleDevRequest(req, res, next) {
         console.log(rows);
     }
     catch(error) {
-        console.log(error);
+        logger.error(error);
     }
     finally {
-        if(!rows)  res.send({statusCode : 300, statusMessage : "데이터 전송 성공"});
-        else       res.send({statusCode : 301, statusMessage : "데이터 전송 실패", payload : rows[0]});
+        if(!rows)  res.send({statusCode : 300, statusMessage : "데이터 전송 실패"});
+        else       res.send({statusCode : 301, statusMessage : "데이터 전송 성공", payload : rows[0]});
     }
 }
 
@@ -68,6 +72,8 @@ async function handleDevRequest(req, res, next) {
  */
 async function handleUserRequest(req, res, next) {
 
+    logger.info("ram.handle_user_request");
+
     let rows   = null;
     let userId = req.body.user_id;
  
@@ -76,11 +82,11 @@ async function handleUserRequest(req, res, next) {
         console.log(rows);
     }
     catch(error) {
-        console.log(error);
+        logger.error(error);
     }
     finally {
-        if(!rows)  res.send({statusCode : 300, statusMessage : "데이터 전송 성공"});
-        else       res.send({statusCode : 301, statusMessage : "데이터 전송 실패", payload : rows[0]});
+        if(!rows)  res.send({statusCode : 300, statusMessage : "데이터 전송 실패"});
+        else       res.send({statusCode : 301, statusMessage : "데이터 전송 성공", payload : rows[0]});
     }
 }
 
@@ -93,7 +99,7 @@ async function handleUserRequest(req, res, next) {
  */
 async function handle_authority_request(req, res, next) {
 
-    console.log("at chec");
+    logger.info("handle_authority_request");
 
     let authority = false;
     let userId    = req.body.user_id;
@@ -105,10 +111,9 @@ async function handle_authority_request(req, res, next) {
         }
     }
     catch(error) {
-        console.log(error);
+        logger.error(error);
     }
     finally {
-        console.log("authority : ", authority);
         if(authority)  next();
         else           res.send(statusGen(500, "권한 없음"));
     }
@@ -124,16 +129,17 @@ async function handle_authority_request(req, res, next) {
  */
  async function handle_weather_request(req, res, next) {
     
+    logger.info("handle_weather_request");
+
     let weather = null;
  
     try {
         weather = await openAPI.get_weather("Goyang-si");
     }
     catch(error) {
-        console.log(error);
+        logger.error(error);
     }
     finally {
-        console.log(weather);
         if(!weather)  res.send({statusCode : 300, statusMessage : "데이터 전송 실패"});
         else          res.send({statusCode : 301, statusMessage : "데이터 전송 성공", payload : weather});
     }

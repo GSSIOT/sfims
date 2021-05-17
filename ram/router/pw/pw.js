@@ -5,7 +5,7 @@ const dotenv        = require("dotenv").config({path : "../../../.env"});
 const statusGen     = require("../../statusgenerator");
 const dbm           = require("../../../db/dbm");
 const jwt           = require("jsonwebtoken");
-
+const {logger}      = require("../../../server/winston");
 
 
 /**
@@ -16,6 +16,8 @@ const jwt           = require("jsonwebtoken");
  */
  async function handleEmailTokenRequest(req, res, next) {
 
+    logger.info("ram.handle_email_token_request");
+
     const userEmail   = req.body.email;
     const token       = jwt.sign({email : userEmail}, process.env.JWT_SECRET_KEY);
     const mailOptions = {
@@ -25,15 +27,13 @@ const jwt           = require("jsonwebtoken");
         text    : "오른쪽 코드를 입력해주세요 : " + token,
     };
 
-    console.log("mailOptions : ", mailOptions);
-
     smtpTransport.sendMail(mailOptions, function(error, info) {
         if(!error) {
-            console.log("email sending success");
+            logger.info("ram.smtp.send_mail");
             res.json(statusGen(230, "email sending success"));
         }
         else {
-            console.log("email sending error : " + error.message);
+            logger.error(error);
             res.json(statusGen(231, "email sending error : " + error.message));
         }
     });
@@ -49,6 +49,8 @@ const jwt           = require("jsonwebtoken");
  */
 function handleEmailAuthRequest(req, res, next) {
 
+    logger.info("ram.handle_email_auth_request");
+
     const userEmail = req.body.email;
     const userToken = req.body.token;
 
@@ -56,10 +58,12 @@ function handleEmailAuthRequest(req, res, next) {
 
         // 비밀번호 변경(비인가 토큰)
         if(error && req.url == "/pw/change") {
+            logger.error(error);
             res.json(statusGen(253, "password change failed because invalid signature"));
         }
         // 이메일 인증
         if(error && req.url == "/pw/emailauth") {
+            logger.error(error);
             res.json(statusGen(233, "invalid signature!"));
         }
         // 비밀번호 변경(이메일 주소 다름)

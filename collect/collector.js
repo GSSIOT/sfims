@@ -4,7 +4,7 @@ const hmac     = require("./hmac");
 const dbm      = require("../db/dbm");
 const dotenv   = require("dotenv").config({path : "../.env"});
 const errorGen = require("../error");
-const logger   = require("../server/winston");
+const {logger} = require("../server/winston");
 
 
 
@@ -133,7 +133,7 @@ collector.prototype.standardize_data = function (farmData) {
         envData.push(farmData[0][prop]);
     }
 
-    console.log(envData);
+    //console.log(envData);
     return envData;
 }
 

@@ -2,6 +2,7 @@ const winston                      = require("winston");
 const winstonDaliy                 = require("winston-daily-rotate-file");
 const logDir                       = "./log";
 const {combine, timestamp, printf} = winston.format;
+const expresswinston               = require("express-winston");
 
 
 const logFormat = printf(({timestamp, level, message, stack}) => {
@@ -51,4 +52,38 @@ if(process.env.NODE_ENV !== 'production') {
     }))
 }
 
-module.exports = logger;
+
+let expressWinston = expresswinston.logger({
+    
+    transports : [
+        new winstonDaliy({
+            level : "info",
+            filename : `app.%DATE%.log`,
+            dirname : logDir + "/express"
+        })
+    ],
+
+    format : winston.format.combine(
+        winston.format.colorize(),
+        winston.format.json()
+    )
+});
+
+
+
+let expressErrorWinston = expresswinston.errorLogger({
+    transports : [
+        new winstonDaliy({
+            level : "info",
+            filename : `app.%DATE%.log`,
+            dirname : logDir + "/express"
+        })
+    ],
+
+    format : winston.format.combine(
+        winston.format.colorize(),
+        winston.format.json()
+    )
+})
+
+module.exports = {logger, expressWinston, expressErrorWinston};

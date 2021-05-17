@@ -4,6 +4,7 @@ const router    = express.Router();
 const jwt       = require("jsonwebtoken");
 const statusGen = require("../../statusgenerator");
 const dotenv    = require("dotenv").config({path : "../../../.env"});
+const logger    = require("../../../server/winston");
 
 
 /**
@@ -14,6 +15,8 @@ const dotenv    = require("dotenv").config({path : "../../../.env"});
  */
 function login(req, res, next) {
     passport.authenticate("local", function(error, user, info) {
+
+        logger.info("ram.login_authentication");
 
         let _jwt = jwt.sign({id : user.id}, process.env.JWT_SECRET_KEY);
 

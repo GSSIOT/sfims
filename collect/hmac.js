@@ -2,6 +2,7 @@ const crypto   = require("crypto");
 const cryptoJS = require("crypto-js");
 const SHA256   = require("crypto-js/sha256");
 const Base64   = require("crypto-js/enc-base64");
+const {logger} = require("../server/winston");
 const dotenv   = require("dotenv").config({path : "../.env"});
 
 
@@ -30,12 +31,12 @@ function hmac() {
  */
 hmac.prototype.get_signature = function (method, date, url) {
 
+    logger.info("hmac.get_signature");
+
     let   hash;
     const SECRET_KEY = process.env.API_SECRET_KEY;
     const ACCESS_KEY = process.env.API_ACCESS_KEY;
     const func = cryptoJS.algo.HMAC.create(cryptoJS.algo.SHA256, "GSSIOT");
-    
-    //console.log("param : ", method, date, url);
 
     func.update(method);
     func.update(" ");

@@ -2,7 +2,7 @@ const ram       = require("../ram/ram");
 const dbm       = require("../db/dbm");
 const collector = require("../collect/collector");
 const detector  = require("../detector/detector");
-
+const {logger}  = require("../server/winston");
 
 /**
  * @description
@@ -24,6 +24,8 @@ function server() {
  */
 server.prototype.on = async function () {
 
+    logger.info("server.on");
+
     let dbmOn       = false;
     let ramOn       = false;
     let collectorOn = false;
@@ -35,7 +37,7 @@ server.prototype.on = async function () {
     }
 
     catch(error) {
-        console.log(error);
+        logger.error(error);
     }
 
     finally {
@@ -50,6 +52,8 @@ server.prototype.on = async function () {
  * @description
  */
 server.prototype.off = function () {
+
+    logger.info("server.off");
 
     if(!this.ram.terminate()) {
         delete this.ram;

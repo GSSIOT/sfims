@@ -1,6 +1,8 @@
 const request   = require("request");
 const dotenv    = require("dotenv").config({path : "../../../../.env"});
 const statusGen = require("../../statusgenerator");
+const {logger}  = require("../../../server/winston")
+
 
 /**
  * @abstract
@@ -10,7 +12,7 @@ const statusGen = require("../../statusgenerator");
  */
 function recaptcha(req, res, next) {
 
-    console.log(req.body['recaptcha']);
+    logger.info("ram.recaptcha");
 
     let payload = {
         method  : "POST",
@@ -23,6 +25,8 @@ function recaptcha(req, res, next) {
     };
 
     request(payload, function(error, response, body) {
+
+        logger.info("ram.recaptcha.request");
 
         const success = JSON.parse(body)["success"];
 

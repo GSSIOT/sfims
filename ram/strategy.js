@@ -5,6 +5,7 @@ const dbm            = require("../db/dbm");
 const jwt            = require("passport-jwt");
 const jwtStrategy    = require("passport-jwt").Strategy;
 const localStrategy  = require("passport-local").Strategy;
+const {logger}       = require("../server/winston");
 
 
 
@@ -34,12 +35,15 @@ function strategy() {
 
     async function localVerify(id, pw, done) {
 
+        logger.info("ram.local_verify");
+
         let user = false;
 
         try {
             user = await dbm.find_user(id, pw);
         }
         catch (error) {
+            logger.error(error);
             done(error, false);
         }
         finally {
@@ -50,12 +54,15 @@ function strategy() {
 
     async function jwtVerify(payload, done) {
 
+        logger.info("ram.jwt_verify");
+
         let user = false;
 
         try {
             user = await dbm.find("USERINFOTABLE", "USER_ID", payload.id);
         }
         catch(error) {
+            logger.error(error);
             done(error, false);
         }
         finally {

@@ -2,7 +2,7 @@ const mariadb  = require("mariadb");
 const config   = require("./config");
 const math     = require("math");
 const errorGen = require("../error");
-const logger   = require("../server/winston");
+const {logger} = require("../server/winston");
 
 
 /**

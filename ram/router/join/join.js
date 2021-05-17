@@ -3,6 +3,7 @@ const router    = express.Router();
 const statusGen = require("../../statusgenerator");
 const dotenv    = require("dotenv").config({path : "../../../.env"});
 const dbm       = require("../../../db/dbm");
+const logger    = require("../../../server/winston");
 
 
 function json_to_array(json) {
@@ -24,14 +25,14 @@ function json_to_array(json) {
  * @param {*} next 
  */
 async function join(req, res, next) {
-    
+
+    logger.info("ram.join");
+
     let userInfo = req.body;
     let user     = await dbm.find("USERINFOTABLE", "USER_ID", userInfo.user_id);
     let email    = await dbm.find("USERINFOTABLE", "USER_EMAIL", userInfo.user_email);
     let result   = true;
     let statusMessage;
-
-    console.log(req.body.user_info);
 
     if(user || email) {
         statusMessage  = user  ? "ID IN USE" : "";
