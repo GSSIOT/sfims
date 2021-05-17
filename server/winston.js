@@ -54,10 +54,11 @@ if(process.env.NODE_ENV !== 'production') {
 
 
 let expressWinston = expresswinston.logger({
-    
+
     transports : [
         new winstonDaliy({
             level : "info",
+            datePattern : 'YYYY-MM-DD',
             filename : `app.%DATE%.log`,
             dirname : logDir + "/express",
             zippedArchive : true,
@@ -65,8 +66,11 @@ let expressWinston = expresswinston.logger({
     ],
 
     format : winston.format.combine(
+        timestamp({
+            format : 'HH:mm:ss:SSS',
+        }),
         winston.format.colorize(),
-        winston.format.json()
+        winston.format.json(),
     )
 });
 

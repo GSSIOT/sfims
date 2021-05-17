@@ -51,6 +51,7 @@ collector.prototype.init = async function () {
 
     try {
         farmEnv = await this.get_data("data");
+        console.log(farmEnv);
         result  = await dbm.insert("INSERT INTO ENVINFOTABLE VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", this.standardize_data(farmEnv));
     }
     

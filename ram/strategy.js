@@ -27,9 +27,6 @@ function strategy() {
         // if(req && req.cookies)  token = req.cookies["jwt"];
         // console.log("cookie-jwt", token);
         if(req.headers.jwt)  token = req.headers.jwt;
-        
-        console.log("header-jwt", token);
-
         return token;
     }
 
