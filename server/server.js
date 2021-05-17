@@ -35,7 +35,7 @@ server.prototype.on = async function () {
         await this.dbm.init();
         this.collector.init();
         await this.ram.init();
-        setInterval(async() => {await this.collector.collect()}, 1000 * 50);
+        setInterval(async() => {await this.collector.collect()}, 1000 * 5);
     }
 
     catch(error) {

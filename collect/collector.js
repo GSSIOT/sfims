@@ -4,7 +4,6 @@ const hmac     = require("./hmac");
 const dbm      = require("../db/dbm");
 const dotenv   = require("dotenv").config({path : "../.env"});
 const errorGen = require("../error");
-const openAPI  = require("./openapi");
 
 
 
@@ -16,7 +15,6 @@ function collector() {
     this.bcrypt  = null;
     this.request = null;
     this.hmac    = null;
-    this.openAPI = null;
 }
 
 
@@ -30,9 +28,8 @@ collector.prototype.init = function () {
     this.dbm     = dbm;
     this.bcrypt  = bcrypt;
     this.hmac    = hmac;
-    this.openAPI = openAPI;
 
-    if(!this.dbm || !this.bcrypt || !this.hmac || !this.openAPI)  return false;
+    if(!this.dbm || !this.bcrypt || !this.hmac)  return false;
 
     console.log("collector init");
     return true;
@@ -45,19 +42,21 @@ collector.prototype.init = function () {
  */
  collector.prototype.collect = async function () {
 
-    try {
-        let farmEnv = await this.get_data("data");
-        // console.log(openAPI.get_weather());
-        // let outEnv  = await this.openAPI.get_weather("Goyang-si");
-        
-        console.log(this.standardize_data(farmEnv));
-        // console.log(outEnv);
+    let farmEnv = null;
+    let result  = false;
 
-        let result  = await dbm.insert("INSERT INTO ENVINFOTABLE VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", this.standardize_data(farmEnv));
+    try {
+        farmEnv = await this.get_data("data");
+        result  = await dbm.insert("INSERT INTO ENVINFOTABLE VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", this.standardize_data(farmEnv));
     }
     
     catch(error) {
         console.log(error);
+    }
+
+    finally {
+        if(!result)  return true;
+        else         return false;
     }
 }
 
@@ -106,7 +105,7 @@ collector.prototype.generate_message = function (api) {
         method  : method,
         uri     : url,
         headers : { "x-date" : date, "x-accesskey" : accessKey, "x-signature" : hmac.get_signature(method, date, url)},
-        body    : { "Farmid" : 2 },
+        body    : { "Farmid" : -1 },
         json    : true 
     }
 
@@ -121,24 +120,17 @@ collector.prototype.generate_message = function (api) {
  * @description
  * @param {*} data 
  */
-collector.prototype.standardize_data = function (data) {
+collector.prototype.standardize_data = function (farmData) {
     
-    //console.log("standardize", data["data"]);
-    
-    // 외부 데이터 받아서 추가하기
-    // let outenv = this.openAPI.get_weather("Goyang-si");
 
+    let envData = [];
 
-
-
-    let farmenv = [];
-
-    for (let prop in data[0]) {
-        farmenv.push(data[0][prop]);
+    for (let prop in farmData[0]) {
+        envData.push(farmData[0][prop]);
     }
 
-    console.log(farmenv);
-    return farmenv;
+    console.log(envData);
+    return envData;
 }
 
 

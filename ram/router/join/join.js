@@ -41,15 +41,12 @@ async function join(req, res, next) {
 
     else {
 
-        userInfo.user_register   = "20210514";
+        userInfo.user_register   = Date.now();
         userInfo.user_authority  = "user";
-        userInfo.user_class      = "1";
-        userInfo.last_vistit     = "20210514"
-        userInfo.user_lastaction = "join";
 
         console.log(userInfo)
 
-        result = await dbm.insert("INSERT INTO USERINFOTABLE VALUES (?,?,?,?,?,?,?,?,?,?)", json_to_array(userInfo));
+        result = await dbm.insert("INSERT INTO USERINFOTABLE VALUES (?,?,?,?,?,?,?)", json_to_array(userInfo));
         
         if(result)  res.json(statusGen(908, "[JOIN] join success"));
         else        res.json(statusGen(907, "[JOIN] db insert failed"));
