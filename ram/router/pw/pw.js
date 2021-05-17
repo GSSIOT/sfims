@@ -29,12 +29,12 @@ const jwt           = require("jsonwebtoken");
 
     smtpTransport.sendMail(mailOptions, function(error, info) {
         if(!error) {
-            console.log("이메일 전송 성공");
-            res.json(statusGen(230, "이메일 전송 성공"));
+            console.log("email sending success");
+            res.json(statusGen(230, "email sending success"));
         }
         else {
-            console.log("이메일 전송 실패 : " + error.message);
-            res.json(statusGen(231, "이메일 전송 실패 : " + error.message));
+            console.log("email sending error : " + error.message);
+            res.json(statusGen(231, "email sending error : " + error.message));
         }
     });
 }
@@ -56,19 +56,19 @@ function handleEmailAuthRequest(req, res, next) {
 
         // 비밀번호 변경(비인가 토큰)
         if(error && req.url == "/pw/change") {
-            res.json(statusGen(253, "이메일 인증 실패"));
+            res.json(statusGen(253, "password change failed because invalid signature"));
         }
         // 이메일 인증
         if(error && req.url == "/pw/emailauth") {
-            res.json(statusGen(233, "이메일 인증 실패"));
+            res.json(statusGen(233, "invalid signature!"));
         }
         // 비밀번호 변경(이메일 주소 다름)
         if(decode && req.url == "/pw/change") {
-            decode.email == userEmail ? next() : res.json(statusGen(254, "이메일 주소가 다름"));
+            decode.email == userEmail ? next() : res.json(statusGen(254, "password change failed because invalid email"));
         }
         // 이메일 인증
         if(decode && req.url == "/pw/emailauth") {
-            decode.email == userEmail ? res.json(statusGen(232, "이메일 인증 실패")) : res.json(statusGen(234, "등록되지 않은 이메일"));
+            decode.email == userEmail ? res.json(statusGen(232, "email authentication success")) : res.json(statusGen(234, "invalid email"));
         }
     });
 }
@@ -91,7 +91,7 @@ function handlePasswordChangeRequest(req, res, next) {
     
     // 변경
     // dbm.update()
-    res.json(statusGen(250, "비밀번호 변경 성공"));
+    res.json(statusGen(250, "password changed"));
 
 }
 

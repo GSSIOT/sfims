@@ -18,7 +18,7 @@ function login(req, res, next) {
         let _jwt = jwt.sign({id : user.id}, process.env.JWT_SECRET_KEY);
 
         if(!user) {
-            res.json(statusGen(101, "로그인 실패 아이디가 없거나 비밀번호가 틀림"));
+            res.json(statusGen(102, "login failed"));
         }
         else {
             //res.setHeader("jwt", _jwt);
@@ -27,7 +27,7 @@ function login(req, res, next) {
             res.json({
                 jwt : _jwt,
                 statusCode : 100,
-                statusMessage : "로그인 성공"
+                statusMessage : "login success"
             })
             //res.cookie("jwt", _jwt, {secure : false, httpOnly : false});
         }

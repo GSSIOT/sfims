@@ -23,18 +23,18 @@ function collector() {
  * @description
  * @param {*} dbm 
  */
-collector.prototype.init = function () {
+collector.prototype.init = async function () {
 
     this.dbm     = dbm;
     this.bcrypt  = bcrypt;
     this.hmac    = hmac;
 
     if(!this.dbm || !this.bcrypt || !this.hmac)  return false;
-
+    setInterval(async ()=> {await this.collect()}, 1000 * 3);
     console.log("collector init");
+
     return true;
 }
-
 
 
 /**

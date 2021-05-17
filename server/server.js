@@ -24,28 +24,24 @@ function server() {
  */
 server.prototype.on = async function () {
 
-    // this.dbm       = dbm.create();
-    // this.ram       = ram.create();
-    // this.collector = collector.create(dbm, ram);
-
-    this.collector = collector;
-    this.ram       = ram;
+    let dbmOn       = false;
+    let ramOn       = false;
+    let collectorOn = false;
 
     try {
-        await this.dbm.init();
-        this.collector.init();
-        await this.ram.init();
-        setInterval(async() => {await this.collector.collect()}, 1000 * 5);
+        dbmOn       = await this.dbm.init();
+        collectorOn = await this.collector.init();
+        ramOn       = await this.ram.init();
     }
 
     catch(error) {
-        throw error;
+        console.log(error);
     }
-    // if(!this.detector.init())   return false;
 
-    // setInterval(this.detector.detect_abnormality, 1000 * 5);
-
-    return true;
+    finally {
+        if(dbmOn && collectorOn && ramOn)  return true;
+        else                               return false;
+    }
 }
 
 

@@ -36,7 +36,7 @@ async function join(req, res, next) {
     if(user || email) {
         statusMessage  = user  ? "ID IN USE" : "";
         statusMessage += email ? " EMAIL IN USE" : "";
-        res.json(statusGen(401, statusMessage));
+        res.json(statusGen(909, statusMessage));
     }
 
     else {
@@ -48,8 +48,8 @@ async function join(req, res, next) {
 
         result = await dbm.insert("INSERT INTO USERINFOTABLE VALUES (?,?,?,?,?,?,?)", json_to_array(userInfo));
         
-        if(result)  res.json(statusGen(400, "회원가입 성공"));
-        else        res.json(statusGen(001, "데이터베이스 에러"));
+        if(result)  res.json(statusGen(908, "[JOIN] join success"));
+        else        res.json(statusGen(907, "[JOIN] db insert failed"));
     }
 }
 
