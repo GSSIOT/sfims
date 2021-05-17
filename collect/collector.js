@@ -33,7 +33,7 @@ collector.prototype.init = async function () {
     this.hmac    = hmac;
 
     if(!this.dbm || !this.bcrypt || !this.hmac)  return false;
-    setInterval(async ()=> {await this.collect()}, 1000 * 3);
+    setInterval(async ()=> {await this.collect()}, 1000 * 30);
 
     return true;
 }

@@ -4,7 +4,6 @@ const logDir                       = "./log";
 const {combine, timestamp, printf} = winston.format;
 const expresswinston               = require("express-winston");
 
-
 const logFormat = printf(({timestamp, level, message, stack}) => {
     if(stack)  return `${timestamp} ${level} - ${message}\n${stack}`;
     else       return `${timestamp} ${level} - ${message}`;
@@ -44,13 +43,13 @@ let logger = winston.createLogger({
     ]
 });
 
-if(process.env.NODE_ENV !== 'production') {
-    logger.add(new winston.transports.Console({
-        format : winston.format.combine(
-            winston.format.colorize()
-        )
-    }))
-}
+// if(process.env.NODE_ENV !== 'production') {
+//     logger.add(new winston.transports.Console({
+//         format : winston.format.combine(
+//             winston.format.colorize()
+//         )
+//     }))
+// }
 
 
 let expressWinston = expresswinston.logger({
@@ -65,13 +64,21 @@ let expressWinston = expresswinston.logger({
         })
     ],
 
-    format : winston.format.combine(
-        timestamp({
-            format : 'HH:mm:ss:SSS',
-        }),
-        winston.format.colorize(),
-        winston.format.json(),
-    )
+    // format : winston.format.combine(
+    //     timestamp({
+    //         format : 'HH:mm:ss:SSS',
+    //     }),
+    // ),
+
+    // requestWhitelist : ["referer", "url", "body"],
+    // bodyWhitelist : ["statusCode", "statusMessage"],
+    // level : "info",
+    // colorize : true,
+    // meta : true,
+    // msg : 'HTTP {{req.method}} {{req.url}}',
+
+    meta : false,
+    msg  : function(req, res) { return `${req.referer} - ${req.url} : ${res.body}` }
 });
 
 
@@ -86,10 +93,9 @@ let expressErrorWinston = expresswinston.errorLogger({
         })
     ],
 
-    format : winston.format.combine(
-        winston.format.colorize(),
-        winston.format.json()
-    )
+    meta : true,
+    msg : 'HTTP {{req.method}} {{req.url}}',
+
 })
 
 module.exports = {logger, expressWinston, expressErrorWinston};

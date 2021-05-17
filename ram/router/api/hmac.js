@@ -5,8 +5,10 @@ const hmac      = require("../../../collect/hmac");
 
 function messageAuthentication(req, res, next) {
 
+    console.log(req.body);
+    
     let method    = req.method;
-    let url       = `http://localhost:1235${req.url}`;
+    let url       = `${process.env.SVR_HOST}${req.url}`;
     let date      = req.headers['x-date'];
     let accessKey = req.headers['x-accesskey'];
     let signature = req.headers['x-signature'];

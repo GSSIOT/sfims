@@ -47,6 +47,8 @@ hmac.prototype.get_signature = function (method, date, url) {
     func.update("GSSIOT");
 
     hash = func.finalize();
+
+    //console.log(hash.toString(cryptoJS.enc.Base64));
     return hash.toString(cryptoJS.enc.Base64);
 }
 
