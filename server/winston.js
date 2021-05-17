@@ -59,7 +59,8 @@ let expressWinston = expresswinston.logger({
         new winstonDaliy({
             level : "info",
             filename : `app.%DATE%.log`,
-            dirname : logDir + "/express"
+            dirname : logDir + "/express",
+            zippedArchive : true,
         })
     ],
 
@@ -76,7 +77,8 @@ let expressErrorWinston = expresswinston.errorLogger({
         new winstonDaliy({
             level : "info",
             filename : `app.%DATE%.log`,
-            dirname : logDir + "/express"
+            dirname : logDir + "/express",
+            zippedArchive : true,
         })
     ],
 
