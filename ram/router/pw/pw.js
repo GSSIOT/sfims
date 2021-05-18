@@ -5,11 +5,7 @@ const dotenv        = require("dotenv").config({path : "../../../.env"});
 const statusGen     = require("../../statusgenerator");
 const dbm           = require("../../../db/dbm");
 const jwt           = require("jsonwebtoken");
-<<<<<<< HEAD
-
-=======
 const {logger}      = require("../../../server/winston");
->>>>>>> b3ff5a29ab668deb958cd01a7d6865c5761c004f
 
 
 /**
@@ -20,11 +16,8 @@ const {logger}      = require("../../../server/winston");
  */
  async function handleEmailTokenRequest(req, res, next) {
 
-<<<<<<< HEAD
-=======
     logger.info("ram.handle_email_token_request");
 
->>>>>>> b3ff5a29ab668deb958cd01a7d6865c5761c004f
     const userEmail   = req.body.email;
     const token       = jwt.sign({email : userEmail}, process.env.JWT_SECRET_KEY);
     const mailOptions = {
@@ -34,17 +27,6 @@ const {logger}      = require("../../../server/winston");
         text    : "오른쪽 코드를 입력해주세요 : " + token,
     };
 
-<<<<<<< HEAD
-    console.log("mailOptions : ", mailOptions);
-
-    smtpTransport.sendMail(mailOptions, function(error, info) {
-        if(!error) {
-            console.log("email sending success");
-            res.json(statusGen(230, "email sending success"));
-        }
-        else {
-            console.log("email sending error : " + error.message);
-=======
     smtpTransport.sendMail(mailOptions, function(error, info) {
         if(!error) {
             logger.info("ram.smtp.send_mail");
@@ -52,7 +34,6 @@ const {logger}      = require("../../../server/winston");
         }
         else {
             logger.error(error);
->>>>>>> b3ff5a29ab668deb958cd01a7d6865c5761c004f
             res.json(statusGen(231, "email sending error : " + error.message));
         }
     });
@@ -68,11 +49,8 @@ const {logger}      = require("../../../server/winston");
  */
 function handleEmailAuthRequest(req, res, next) {
 
-<<<<<<< HEAD
-=======
     logger.info("ram.handle_email_auth_request");
 
->>>>>>> b3ff5a29ab668deb958cd01a7d6865c5761c004f
     const userEmail = req.body.email;
     const userToken = req.body.token;
 
@@ -80,18 +58,12 @@ function handleEmailAuthRequest(req, res, next) {
 
         // 비밀번호 변경(비인가 토큰)
         if(error && req.url == "/pw/change") {
-<<<<<<< HEAD
-=======
             logger.error(error);
->>>>>>> b3ff5a29ab668deb958cd01a7d6865c5761c004f
             res.json(statusGen(253, "password change failed because invalid signature"));
         }
         // 이메일 인증
         if(error && req.url == "/pw/emailauth") {
-<<<<<<< HEAD
-=======
             logger.error(error);
->>>>>>> b3ff5a29ab668deb958cd01a7d6865c5761c004f
             res.json(statusGen(233, "invalid signature!"));
         }
         // 비밀번호 변경(이메일 주소 다름)

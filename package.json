@@ -19,10 +19,7 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-recaptcha": "^5.0.2",
-<<<<<<< HEAD
-=======
     "express-winston": "^4.1.0",
->>>>>>> b3ff5a29ab668deb958cd01a7d6865c5761c004f
     "firebase-admin": "^9.7.0",
     "jsonwebtoken": "^8.5.1",
     "mariadb": "^2.5.3",
@@ -32,11 +29,8 @@
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
     "request": "^2.88.2",
-<<<<<<< HEAD
-=======
     "winston": "^3.3.3",
     "winston-daily-rotate-file": "^4.5.5",
->>>>>>> b3ff5a29ab668deb958cd01a7d6865c5761c004f
     "xml-js": "^1.6.11"
   },
   "devDependencies": {
