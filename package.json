@@ -1,0 +1,36 @@
+{
+  "name": "sfims",
+  "version": "1.0.0",
+  "description": "sfims server",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node main.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "cookie-parser": "^1.4.5",
+    "cookieparser": "^0.1.0",
+    "cors": "^2.8.5",
+    "crypto": "^1.0.1",
+    "crypto-js": "^4.0.0",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "express-recaptcha": "^5.0.2",
+    "firebase-admin": "^9.7.0",
+    "jsonwebtoken": "^8.5.1",
+    "mariadb": "^2.5.3",
+    "math": "0.0.3",
+    "nodemailer": "^6.5.0",
+    "passport": "^0.4.1",
+    "passport-jwt": "^4.0.0",
+    "passport-local": "^1.0.0",
+    "request": "^2.88.2",
+    "xml-js": "^1.6.11"
+  },
+  "devDependencies": {
+    "artillery": "^1.7.2"
+  }
+}
