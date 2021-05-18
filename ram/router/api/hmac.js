@@ -8,10 +8,12 @@ function messageAuthentication(req, res, next) {
     console.log(req.body);
     
     let method    = req.method;
-    let url       = `${process.env.SVR_HOST}${req.url}`;
+    let url       = `${process.env.SVR_HOST}:${process.env.SVR_PORT}${req.url}`;
     let date      = req.headers['x-date'];
     let accessKey = req.headers['x-accesskey'];
     let signature = req.headers['x-signature'];
+
+    console.log(url);
 
     if(!date || !accessKey || !signature)  return res.send(statusGen(204, "Request Format Error"));
 
