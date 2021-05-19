@@ -12,7 +12,7 @@ const runtime   = require("../../../runtime");
  */
  async function handle_authority_request(req, res, next) {
 
-    let authority = false;
+    let authority = true;
     let userId    = req.body.user_id;
     let farmId    = req.body.farm_id   || null;
     let farmId1   = req.body.farm_id_1 || null;
@@ -20,10 +20,10 @@ const runtime   = require("../../../runtime");
 
     runtime.start();
 
-    if(req.url.indexOf("compare") > 0) {
+    if(req.url.indexOf("compare") < 0) {
         try {
             if(farmId || userId) {
-                authority = await dbm.check_user_authoriy(userId, farmId);
+                authority = await dbm.check_user_authority(userId, farmId);
             }
         }
         catch(error) {
@@ -40,7 +40,7 @@ const runtime   = require("../../../runtime");
         try {
             if(farmId1 || farmId2 || userId) {
                 authority &= await dbm.check_user_authority(userId, farmId1);
-                authority &= await dbm.check_user_authority(userId, farmId2)
+                authority &= await dbm.check_user_authority(userId, farmId2);
             }
         }
         catch(error) {

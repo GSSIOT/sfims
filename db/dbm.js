@@ -256,15 +256,14 @@ dbm.prototype.check_user_authority = async function (userId, farmId) {
     runtime.start();
 
     try {
-        rows = await this.select(`SELECT FARM_ID FROM FARMINFOTABLE WHERE USER_ID = '${userId}'`);
+        rows = await this.select(`SELECT count(*) AS auth FROM FARMINFOTABLE WHERE USER_ID = '${userId}' AND FARM_ID = ${farmId}`);
     }
     catch(error) {
         logger.error(error);
     }
     finally {
         logger.info("dbm.check_user_authority" + runtime.end());
-        if(!rows)  return false;
-        return rows.find(element => element['FARM_ID'] == farmId);
+        return rows[0]['auth'] > 0 ? true : false;
     }
 }
 
