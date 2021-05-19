@@ -43,13 +43,13 @@ let logger = winston.createLogger({
     ]
 });
 
-// if(process.env.NODE_ENV !== 'production') {
-//     logger.add(new winston.transports.Console({
-//         format : winston.format.combine(
-//             winston.format.colorize()
-//         )
-//     }))
-// }
+if(process.env.NODE_ENV !== 'production') {
+    logger.add(new winston.transports.Console({
+        format : winston.format.combine(
+            winston.format.colorize()
+        )
+    }))
+}
 
 
 let expressWinston = expresswinston.logger({
