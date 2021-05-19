@@ -5,6 +5,7 @@ const dbm      = require("../db/dbm");
 const dotenv   = require("dotenv").config({path : "../.env"});
 const errorGen = require("../error");
 const {logger} = require("../server/winston");
+const farmData = require("../farmdata");
 
 
 
@@ -33,7 +34,7 @@ collector.prototype.init = async function () {
     this.hmac    = hmac;
 
     if(!this.dbm || !this.bcrypt || !this.hmac)  return false;
-    setInterval(async ()=> {await this.collect()}, 1000 * 30);
+    setInterval(async ()=> {await this.collect()}, 1000 * 10);
 
     return true;
 }
@@ -50,9 +51,14 @@ collector.prototype.init = async function () {
     let result  = false;
 
     try {
-        farmEnv = await this.get_data("data");
-        console.log(farmEnv);
-        result  = await dbm.insert("INSERT INTO ENVINFOTABLE VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", this.standardize_data(farmEnv));
+        farmEnv = await this.get_data("data", 1);
+        result  = await dbm.insert("INSERT INTO ENVINFOTABLE VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", this.standardize_data(farmEnv));
+        farmEnv = await this.get_data("data", 2);
+        result  = await dbm.insert("INSERT INTO ENVINFOTABLE VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", this.standardize_data(farmEnv));
+        farmEnv = await this.get_data("data", 3);
+        result  = await dbm.insert("INSERT INTO ENVINFOTABLE VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", this.standardize_data(farmEnv));
+        farmEnv = await this.get_data("data", 4);
+        result  = await dbm.insert("INSERT INTO ENVINFOTABLE VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", this.standardize_data(farmEnv));
     }
     
     catch(error) {
@@ -98,7 +104,7 @@ collector.prototype.terminate = function () {
  * @description
  * @param {*} form 
  */
-collector.prototype.generate_message = function (api) {
+collector.prototype.generate_message = function (api, farmId) {
 
     logger.info("collector.generate_message");
 
@@ -111,7 +117,7 @@ collector.prototype.generate_message = function (api) {
         method  : method,
         uri     : url,
         headers : { "x-date" : date, "x-accesskey" : accessKey, "x-signature" : hmac.get_signature(method, date, url)},
-        body    : { "Farmid" : -1 },
+        body    : { "Farmid" : farmId },
         json    : true 
     }
 
@@ -130,6 +136,7 @@ collector.prototype.standardize_data = function (farmData) {
 
     let envData = [];
 
+    
     for (let prop in farmData[0]) {
         envData.push(farmData[0][prop]);
     }
@@ -141,17 +148,17 @@ collector.prototype.standardize_data = function (farmData) {
 
 
 /**
- * @description
- * @param {*} query 
- * @returns 
+ * @description 
+ * @param {*} options
+ * @param {*} api
  */
-collector.prototype.get_data = function (options, api) {
+collector.prototype.get_data = function (api, farmId) {
 
     return new Promise((resolve, reject) => {
         
         logger.info("collector.get_data");
 
-        let payload = this.generate_message(options, api);        
+        let payload = this.generate_message(api, farmId);        
 
         request(payload, function(error, response, body) {
 
