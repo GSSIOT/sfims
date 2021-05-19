@@ -6,6 +6,7 @@ const dotenv   = require("dotenv").config({path : "../.env"});
 const errorGen = require("../error");
 const {logger} = require("../server/winston");
 const farmData = require("../farmdata");
+const runtime  = require("../runtime");
 
 
 
@@ -27,15 +28,14 @@ function collector() {
  */
 collector.prototype.init = async function () {
 
-    logger.info("collector.init");
-
     this.dbm     = dbm;
     this.bcrypt  = bcrypt;
     this.hmac    = hmac;
+    
+    logger.info("collector.init");
 
     if(!this.dbm || !this.bcrypt || !this.hmac)  return false;
-    setInterval(async ()=> {await this.collect()}, 1000 * 10);
-
+    setInterval(async ()=> {await this.collect()}, 1000 * 90);
     return true;
 }
 
@@ -45,20 +45,17 @@ collector.prototype.init = async function () {
  */
  collector.prototype.collect = async function () {
 
-    logger.info("collector.collect");
-    
-    let farmEnv = null;
     let result  = false;
 
+    runtime.start();
+
     try {
-        farmEnv = await this.get_data("data", 1);
-        result  = await dbm.insert("INSERT INTO ENVINFOTABLE VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", this.standardize_data(farmEnv));
-        farmEnv = await this.get_data("data", 2);
-        result  = await dbm.insert("INSERT INTO ENVINFOTABLE VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", this.standardize_data(farmEnv));
-        farmEnv = await this.get_data("data", 3);
-        result  = await dbm.insert("INSERT INTO ENVINFOTABLE VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", this.standardize_data(farmEnv));
-        farmEnv = await this.get_data("data", 4);
-        result  = await dbm.insert("INSERT INTO ENVINFOTABLE VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", this.standardize_data(farmEnv));
+        farmEnv = await this.get_data("data", -1);
+        farmEnv = this.standardize_data(farmEnv);
+        
+        for(let value of farmEnv) {
+            result &= await dbm.insert("INSERT INTO ENVINFOTABLE VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", value);
+        }
     }
     
     catch(error) {
@@ -66,6 +63,7 @@ collector.prototype.init = async function () {
     }
 
     finally {
+        logger.info("collector.collect" + runtime.end());
         if(!result)  return true;
         else         return false;
     }
@@ -106,8 +104,6 @@ collector.prototype.terminate = function () {
  */
 collector.prototype.generate_message = function (api, farmId) {
 
-    logger.info("collector.generate_message");
-
     const method    = "POST";
     const date      = Date.now().toString();
     const url       = process.env.GSS_CLOUD + `/${api}`;
@@ -121,6 +117,8 @@ collector.prototype.generate_message = function (api, farmId) {
         json    : true 
     }
 
+    logger.info("collector.generate_message");
+
     return payload;
 }
 
@@ -132,16 +130,16 @@ collector.prototype.generate_message = function (api, farmId) {
  */
 collector.prototype.standardize_data = function (farmData) {
     
-    logger.info("collector.standardize_data");
-
     let envData = [];
 
-    
-    for (let prop in farmData[0]) {
-        envData.push(farmData[0][prop]);
+    for (let idx = 0; idx < farmData.length; ++idx) {
+        envData.push([]);
+        for (let prop in farmData[idx]) {
+            envData[idx].push(farmData[idx][prop]);
+        }
     }
+    logger.info("collector.standardize_data");
 
-    //console.log(envData);
     return envData;
 }
 
@@ -156,15 +154,15 @@ collector.prototype.get_data = function (api, farmId) {
 
     return new Promise((resolve, reject) => {
         
-        logger.info("collector.get_data");
-
         let payload = this.generate_message(api, farmId);        
 
         request(payload, function(error, response, body) {
-
+            logger.info("collector.get_data_reuquest");
             if(error)  reject(error);
             else       resolve(body);
         });    
+
+        logger.info("collector.get_data");
     })
 }
 

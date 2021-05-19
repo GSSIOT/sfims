@@ -6,6 +6,7 @@ const statusGen     = require("../../statusgenerator");
 const dbm           = require("../../../db/dbm");
 const jwt           = require("jsonwebtoken");
 const {logger}      = require("../../../server/winston");
+const runtime       = require("../../../runtime");
 
 
 /**
@@ -14,9 +15,7 @@ const {logger}      = require("../../../server/winston");
  * @param {*} res 
  * @param {*} next 
  */
- async function handleEmailTokenRequest(req, res, next) {
-
-    logger.info("ram.handle_email_token_request");
+ async function handle_email_token_request(req, res, next) {
 
     const userEmail   = req.body.email;
     const token       = jwt.sign({email : userEmail}, process.env.JWT_SECRET_KEY);
@@ -26,6 +25,8 @@ const {logger}      = require("../../../server/winston");
         subject : "스마트팜 통합관제 시스템 인증 이메일",
         text    : "오른쪽 코드를 입력해주세요 : " + token,
     };
+
+    runtime.start();
 
     smtpTransport.sendMail(mailOptions, function(error, info) {
         if(!error) {
@@ -37,6 +38,9 @@ const {logger}      = require("../../../server/winston");
             res.json(statusGen(231, "email sending error : " + error.message));
         }
     });
+
+    logger.info("ram.handle_email_token_request" + runtime.end());
+
 }
 
 
@@ -47,12 +51,12 @@ const {logger}      = require("../../../server/winston");
  * @param {*} res 
  * @param {*} next 
  */
-function handleEmailAuthRequest(req, res, next) {
-
-    logger.info("ram.handle_email_auth_request");
+function handle_email_auth_request(req, res, next) {
 
     const userEmail = req.body.email;
     const userToken = req.body.token;
+
+    runtime.start();
 
     jwt.verify(userToken, process.env.JWT_SECRET_KEY, function(error, decode) {
 
@@ -75,6 +79,8 @@ function handleEmailAuthRequest(req, res, next) {
             decode.email == userEmail ? res.json(statusGen(232, "email authentication success")) : res.json(statusGen(234, "invalid email"));
         }
     });
+
+    logger.info("ram.handle_email_auth_request" + runtime.end())
 }
 
 
@@ -85,7 +91,7 @@ function handleEmailAuthRequest(req, res, next) {
  * @param {*} res 
  * @param {*} next 
  */
-function handlePasswordChangeRequest(req, res, next) {
+function handle_password_change_request(req, res, next) {
 
     // const newPassword = req.body.password;
 
@@ -101,8 +107,8 @@ function handlePasswordChangeRequest(req, res, next) {
 
 
 
-router.post("/pw/email", handleEmailTokenRequest);
-router.post("/pw/emailauth", handleEmailAuthRequest);
-router.post("/pw/change", handleEmailAuthRequest, handlePasswordChangeRequest);
+router.post("/pw/email", handle_email_token_request);
+router.post("/pw/emailauth", handle_email_auth_request);
+router.post("/pw/change", handle_email_auth_request, handle_password_change_request);
 
 module.exports = router;

@@ -4,6 +4,7 @@ const statusGen = require("../../statusgenerator");
 const dotenv    = require("dotenv").config({path : "../../../.env"});
 const dbm       = require("../../../db/dbm");
 const {logger}  = require("../../../server/winston");
+const runtime   = require("../../../runtime");
 
 
 function json_to_array(json) {
@@ -26,18 +27,19 @@ function json_to_array(json) {
  */
 async function join(req, res, next) {
 
-    logger.info("ram.join");
-
     let userInfo = req.body;
     let user     = await dbm.find("USERINFOTABLE", "USER_ID", userInfo.user_id);
     let email    = await dbm.find("USERINFOTABLE", "USER_EMAIL", userInfo.user_email);
     let result   = true;
     let statusMessage;
 
+    runtime.start();
+
     if(user || email) {
         statusMessage  = user  ? "ID IN USE" : "";
         statusMessage += email ? " EMAIL IN USE" : "";
         res.json(statusGen(909, statusMessage));
+        logger.info("ram.join" + runtime.end());
     }
 
     else {
@@ -45,12 +47,11 @@ async function join(req, res, next) {
         userInfo.user_register   = Date.now();
         userInfo.user_authority  = "user";
 
-        console.log(userInfo)
-
         result = await dbm.insert("INSERT INTO USERINFOTABLE VALUES (?,?,?,?,?,?,?)", json_to_array(userInfo));
         
         if(result)  res.json(statusGen(908, "[JOIN] join success"));
         else        res.json(statusGen(907, "[JOIN] db insert failed"));
+        logger.info("ram.join" + runtime.end());
     }
 }
 

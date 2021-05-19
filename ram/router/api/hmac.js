@@ -2,20 +2,23 @@ const cryptoJS  = require("crypto-js");
 const dotenv    = require("dotenv").config({path : "../../../.env"});
 const statusGen = require("../../statusgenerator");
 const hmac      = require("../../../collect/hmac");
+const runtime   = require("../../../runtime");
+const {logger}  = require("../../../server/winston");
 
-function messageAuthentication(req, res, next) {
+function message_authentication(req, res, next) {
 
-    console.log(req.body);
-    
     let method    = req.method;
     let url       = `${process.env.SVR_HOST}${req.url}`;
     let date      = req.headers['x-date'];
     let accessKey = req.headers['x-accesskey'];
     let signature = req.headers['x-signature'];
 
+    runtime.start();
+
     if(!date || !accessKey || !signature)  return res.send(statusGen(204, "Request Format Error"));
 
     if(hmac.get_signature(method, date, url) == signature) {
+        logger.info("ram.message_authentication" + runtime.end());
         next();
     }
 
@@ -24,4 +27,4 @@ function messageAuthentication(req, res, next) {
     }
 }
 
-module.exports = messageAuthentication;
+module.exports = message_authentication;

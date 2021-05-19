@@ -5,6 +5,7 @@ const jwt       = require("jsonwebtoken");
 const statusGen = require("../../statusgenerator");
 const dotenv    = require("dotenv").config({path : "../../../.env"});
 const {logger}  = require("../../../server/winston");
+const runtime   = require("../../../runtime");
 
 
 /**
@@ -16,23 +17,22 @@ const {logger}  = require("../../../server/winston");
 function login(req, res, next) {
     passport.authenticate("local", function(error, user, info) {
 
-        logger.info("ram.login_authentication");
-
         let _jwt = jwt.sign({id : user.id}, process.env.JWT_SECRET_KEY);
+
+        runtime.start();
 
         if(!user) {
             res.json(statusGen(102, "login failed"));
+            logger.info("ram.login_authentication" + runtime.end());
         }
-        else {
-            //res.setHeader("jwt", _jwt);
-            //res.json(statusGen(100, "login success"));
 
+        else {
             res.json({
                 jwt : _jwt,
                 statusCode : 100,
                 statusMessage : "login success"
-            })
-            //res.cookie("jwt", _jwt, {secure : false, httpOnly : false});
+            });
+            logger.info("ram.login_authentication" + runtime.end());
         }
     })(req, res, next);
 }
