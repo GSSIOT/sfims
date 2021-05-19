@@ -89,7 +89,7 @@
 
 
 const request = require("request");
-const options = { method : "POST", json : true};
+// const options = { method : "POST", json : true};
 const cryptoJS = require("crypto-js");
 const dotenv   = require("dotenv").config({path : "../../../.env"});
 const xmlToJson = require("xml-js");
@@ -103,7 +103,7 @@ function test() {
     // let method       = "POST";
     // let space        = " ";
     // let newLine      = "\n";
-    // let hmac         = cryptoJS.algo.HMAC.create(cryptoJS.algo.SHA256, secretKey);
+    // //let hmac         = cryptoJS.algo.HMAC.create(cryptoJS.algo.SHA256, secretKey);
     // let host         = `http://localhost:1234/api/env`;
     let date         = Date.now().toString();
 
@@ -122,11 +122,15 @@ function test() {
     
         method : "POST",
         json   : true,
+<<<<<<< HEAD
         uri    : "http://localhost:1235/api/env",
         headers: { "x-signature" : hmac.get_signature("POST", date.toString(), "http://localhost:1235/api/env"), "x-accesskey" : "GSSIOT", "x-date" : date.toString()},
+=======
+        uri    : "http://192.168.0.2:3030/data",
+        headers: { "x-signature" : hmac.get_signature("POST", date.toString(), "http://192.168.0.2:3030/data"), "x-accesskey" : "GSSIOT", "x-date" : date.toString()},
+>>>>>>> a4582eeb6269b7700875e59cc5a75b23cb7fc84c
         body : {
-            user_id : "gssiot",
-            farm_id : "1",
+            Farmid : "4",
         }
 
     },function(error, res, body) {
@@ -135,12 +139,6 @@ function test() {
     })
 }
 
-test();test();
-test();
-test();
-test();
-test();
-test();
 test();
 // // // setInterval(() => { test(); }, 1000);
 
@@ -168,3 +166,15 @@ test();
 //         ws.send("data");
 //     })
 // });
+<<<<<<< HEAD
+=======
+
+
+// var d = new Date();
+
+
+// var h = d.getHours() > 9 ? d.getHours(1) : '0' + d.getHours();
+
+
+// console.log(h);
+>>>>>>> a4582eeb6269b7700875e59cc5a75b23cb7fc84c

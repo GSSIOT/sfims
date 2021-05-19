@@ -1,7 +1,8 @@
 const request   = require("request");
 const dotenv    = require("dotenv").config({path : "../../../../.env"});
 const statusGen = require("../../statusgenerator");
-const {logger}  = require("../../../server/winston")
+const {logger}  = require("../../../server/winston");
+const runtime = require("../../../runtime");
 
 
 /**
@@ -12,8 +13,6 @@ const {logger}  = require("../../../server/winston")
  */
 function recaptcha(req, res, next) {
 
-    logger.info("ram.recaptcha");
-
     let payload = {
         method  : "POST",
         uri     : "https://www.google.com/recaptcha/api/siteverify",
@@ -23,6 +22,8 @@ function recaptcha(req, res, next) {
             response : req.body['recaptcha'],
         },
     };
+
+    runtime.start();
 
     request(payload, function(error, response, body) {
 
@@ -35,7 +36,7 @@ function recaptcha(req, res, next) {
         else          next();
         
     })
-    
+    logger.info("ram.recaptcha" + runtime.end());
 }
 
 module.exports = recaptcha;
