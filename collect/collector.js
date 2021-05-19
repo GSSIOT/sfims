@@ -154,7 +154,7 @@ collector.prototype.get_data = function (options, api) {
         let payload = this.generate_message(options, api);        
 
         request(payload, function(error, response, body) {
-
+            
             if(error)  reject(error);
             else       resolve(body);
         });    
