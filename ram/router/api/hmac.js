@@ -13,11 +13,7 @@ function message_authentication(req, res, next) {
     let accessKey = req.headers['x-accesskey'];
     let signature = req.headers['x-signature'];
 
-<<<<<<< HEAD
-    console.log(url);
-=======
     runtime.start();
->>>>>>> a4582eeb6269b7700875e59cc5a75b23cb7fc84c
 
     if(!date || !accessKey || !signature)  return res.send(statusGen(204, "Request Format Error"));
 

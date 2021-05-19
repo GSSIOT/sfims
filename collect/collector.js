@@ -157,11 +157,7 @@ collector.prototype.get_data = function (api, farmId) {
         let payload = this.generate_message(api, farmId);        
 
         request(payload, function(error, response, body) {
-<<<<<<< HEAD
-            
-=======
             logger.info("collector.get_data_reuquest");
->>>>>>> a4582eeb6269b7700875e59cc5a75b23cb7fc84c
             if(error)  reject(error);
             else       resolve(body);
         });    

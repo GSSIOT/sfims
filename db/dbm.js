@@ -249,7 +249,7 @@ dbm.prototype.find_user = async function (id, password) {
  * @param {*} farmId 
  * @returns 
  */
-dbm.prototype.check_user_authoriy = async function (userId, farmId) {
+dbm.prototype.check_user_authority = async function (userId, farmId) {
 
     let rows = null;
 

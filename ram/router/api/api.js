@@ -27,8 +27,9 @@ const runtime       = require("../../../runtime");
 
     runtime.start();
 
-    if(!farmId || !startDate || !endDate) {
+    if(!farmId1 || farmId2 || !startDate || !endDate) {
         res.send({statusCode : 301, statusMessage : "데이터 전송 실패"});
+        logger.info("ram.handle_env_compare_day_request" + runtime.end());
         return;
     }
  
@@ -63,8 +64,9 @@ const runtime       = require("../../../runtime");
 
     runtime.start();
 
-    if(!farmId || !startDate || !endDate) {
+    if(!farmId1 || !farmId2 || !startDate || !endDate) {
         res.send({statusCode : 301, statusMessage : "데이터 전송 실패"});
+        logger.info("ram.handle_env_compare_hour_request" + runtime.end());
         return;
     }
  
@@ -104,7 +106,7 @@ const runtime       = require("../../../runtime");
     }
  
     try {
-        rows = await dbm.select(`SELECT * FROM ENVHOURAVG WHERE FARM_ID = '${farmId}' AND DATE >= ${startDate} AND DATE <= ${endDate}`);
+        rows = await dbm.select(`SELECT ${sensorType} FROM ENVHOURAVG WHERE FARM_ID = '${farmId}' AND DATE >= ${startDate} AND DATE <= ${endDate}`);
     }
     catch(error) {
         logger.error(error);
