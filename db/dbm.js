@@ -3,6 +3,8 @@ const config   = require("./config");
 const math     = require("math");
 const errorGen = require("../error");
 const {logger} = require("../server/winston");
+const runtime  = require("../runtime");
+
 
 
 /**
@@ -22,10 +24,9 @@ function dbm () {
  */
 dbm.prototype.init = async function () {
 
-    logger.info("dbm.init")
-
     let result;
     
+    runtime.start();
     this.pool = mariadb.createPool(config);
 
     try {
@@ -49,6 +50,7 @@ dbm.prototype.init = async function () {
     }
     finally {
         this.conn.release();
+        logger.info("dbm.init" + runtime.end());
     }
 }
 
@@ -59,7 +61,7 @@ dbm.prototype.init = async function () {
  */
 dbm.prototype.terminate = async function () {
 
-    logger.info("dbm.terminate");
+    runtime.start();
 
     try {
         await this.pool.end();
@@ -68,9 +70,10 @@ dbm.prototype.terminate = async function () {
     catch(error) {
         logger.error(error);
     }
-
+    
     finally {
         if(this.pool)  delete this.pool;
+        logger.info("dbm.terminate" + runtime.end());
     }
 }
 
@@ -83,9 +86,10 @@ dbm.prototype.terminate = async function () {
  */
 dbm.prototype.insert = async function (query, value) {
 
-    logger.info("dbm.insert");
-
     let result = null;
+    let start  = 0;
+
+    runtime.start();
 
     try {
         this.conn = await this.pool.getConnection();
@@ -96,7 +100,9 @@ dbm.prototype.insert = async function (query, value) {
     }
     finally {
         this.conn.release();
-        return result;
+        logger.info("dbm.insert" + runtime.end());    
+        if(result)  return true;
+        else        return false;
     }
 }
 
@@ -108,9 +114,10 @@ dbm.prototype.insert = async function (query, value) {
  */
 dbm.prototype.delete = async function (query) {
 
-    logger.info("dbm.delete");
-
     let result = null;
+    let start  = 0;
+
+    runtime.start();
 
     try {
         this.conn = await this.pool.getConnection();
@@ -121,7 +128,9 @@ dbm.prototype.delete = async function (query) {
     }
     finally {
         this.conn.release();
-        return result;
+        logger.info("dbm.delete" + runtime.end);
+        if(result)  return true;
+        else        return false;
     }
 }
 
@@ -134,9 +143,9 @@ dbm.prototype.delete = async function (query) {
  */
 dbm.prototype.update = async function (query, value) {
 
-    logger.info("dbm.update");
-
     let result = null;
+
+    runtime.start();
 
     try {
         this.conn = await this.pool.getConnection();
@@ -147,7 +156,9 @@ dbm.prototype.update = async function (query, value) {
     }
     finally {
         this.conn.release();
-        return result;
+        logger.info("dbm.update" + runtime.end());
+        if(result)  return true;
+        else        return false;
     }
 }
 
@@ -159,9 +170,9 @@ dbm.prototype.update = async function (query, value) {
  */
 dbm.prototype.select = async function (query) {
 
-    logger.info("dbm.select");
-
     let result = null;
+
+    runtime.start();
 
     try {
         this.conn = await this.pool.getConnection();
@@ -172,10 +183,10 @@ dbm.prototype.select = async function (query) {
     }
     finally {
         this.conn.release();
+        logger.info("dbm.select" + runtime.end());
         return result;
     }
 }
-
 
 
 /**
@@ -186,9 +197,9 @@ dbm.prototype.select = async function (query) {
  */
 dbm.prototype.find = async function (table, column, target) {
 
-    logger.info("dbm.find");
-
     let rows = null;
+
+    runtime.start();
 
     try {
         rows = await this.select(`SELECT count(*) FROM ${table} WHERE ${column} = '${target}'`);
@@ -197,6 +208,7 @@ dbm.prototype.find = async function (table, column, target) {
         logger.error(error);
     }
     finally {
+        logger.info("dbm.find" + runtime.end());
         if(!rows)  return false;
         return rows[0]['count(*)'] > 0 ? true : false;
     }
@@ -212,9 +224,9 @@ dbm.prototype.find = async function (table, column, target) {
  */
 dbm.prototype.find_user = async function (id, password) {
 
-    logger.info("dbm.find_user");
-
     let rows = null; 
+
+    runtime.start();
 
     try {
         rows = await this.select(`SELECT count(*) FROM USERINFOTABLE WHERE USER_ID = '${id}' AND USER_PW = '${password}'`);
@@ -223,6 +235,7 @@ dbm.prototype.find_user = async function (id, password) {
         logger.error(error);
     }
     finally {
+        logger.info("dbm.find_user" + runtime.end());
         if(!rows)  return false;
         return rows[0]['count(*)'] > 0 ? true : false;
     }
@@ -236,21 +249,21 @@ dbm.prototype.find_user = async function (id, password) {
  * @param {*} farmId 
  * @returns 
  */
-dbm.prototype.check_user_authoriy = async function (userId, farmId) {
-
-    logger.info("dbm.check_user_authority");
+dbm.prototype.check_user_authority = async function (userId, farmId) {
 
     let rows = null;
 
+    runtime.start();
+
     try {
-        rows = await this.select(`SELECT FARM_ID FROM FARMINFOTABLE WHERE USER_ID = '${userId}'`);
+        rows = await this.select(`SELECT count(*) AS auth FROM FARMINFOTABLE WHERE USER_ID = '${userId}' AND FARM_ID = ${farmId}`);
     }
     catch(error) {
         logger.error(error);
     }
     finally {
-        if(!rows)  return false;
-        return rows.find(element => element['FARM_ID'] == farmId);
+        logger.info("dbm.check_user_authority" + runtime.end());
+        return rows[0]['auth'] > 0 ? true : false;
     }
 }
 

@@ -89,7 +89,7 @@
 
 
 const request = require("request");
-const options = { method : "POST", json : true};
+// const options = { method : "POST", json : true};
 const cryptoJS = require("crypto-js");
 const dotenv   = require("dotenv").config({path : "../../../.env"});
 const xmlToJson = require("xml-js");
@@ -103,7 +103,7 @@ function test() {
     // let method       = "POST";
     // let space        = " ";
     // let newLine      = "\n";
-    // let hmac         = cryptoJS.algo.HMAC.create(cryptoJS.algo.SHA256, secretKey);
+    // //let hmac         = cryptoJS.algo.HMAC.create(cryptoJS.algo.SHA256, secretKey);
     // let host         = `http://localhost:1234/api/env`;
     let date         = Date.now().toString();
 
@@ -135,12 +135,6 @@ function test() {
     })
 }
 
-test();test();
-test();
-test();
-test();
-test();
-test();
 test();
 // // // setInterval(() => { test(); }, 1000);
 
@@ -168,3 +162,12 @@ test();
 //         ws.send("data");
 //     })
 // });
+
+
+// var d = new Date();
+
+
+// var h = d.getHours() > 9 ? d.getHours(1) : '0' + d.getHours();
+
+
+// console.log(h);

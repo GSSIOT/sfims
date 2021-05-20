@@ -21,9 +21,7 @@ function ram(dbm) {
 ram.prototype.init = function () {
 
     return new Promise((resolve, reject) => {
-
-        logger.info("ram.init")
-
+        
         this.app.use(cookieParser());
         this.app.use(express.json());
         this.app.use(express.urlencoded({extended : false}));
@@ -34,6 +32,8 @@ ram.prototype.init = function () {
     
         this.app.use("/", require("./router/index"));
         this.app.listen("1235", function () { resolve(); });
+
+        logger.info("ram.init")
     });
 }
 

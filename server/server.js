@@ -24,8 +24,6 @@ function server() {
  */
 server.prototype.on = async function () {
 
-    logger.info("server.on");
-
     let dbmOn       = false;
     let ramOn       = false;
     let collectorOn = false;
@@ -41,6 +39,7 @@ server.prototype.on = async function () {
     }
 
     finally {
+        logger.info("server.on");
         if(dbmOn && collectorOn && ramOn)  return true;
         else                               return false;
     }
@@ -53,8 +52,6 @@ server.prototype.on = async function () {
  */
 server.prototype.off = function () {
 
-    logger.info("server.off");
-
     if(!this.ram.terminate()) {
         delete this.ram;
     }
@@ -66,6 +63,8 @@ server.prototype.off = function () {
     if(!this.dbm.terminate()) {
         delete this.dbm;
     }
+
+    logger.info("server.off");
 }
 
 

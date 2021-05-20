@@ -6,6 +6,7 @@ const jwt            = require("passport-jwt");
 const jwtStrategy    = require("passport-jwt").Strategy;
 const localStrategy  = require("passport-local").Strategy;
 const {logger}       = require("../server/winston");
+const runtime        = require("../runtime");
 
 
 
@@ -32,9 +33,9 @@ function strategy() {
 
     async function localVerify(id, pw, done) {
 
-        logger.info("ram.local_verify");
-
         let user = false;
+
+        runtime.start();
 
         try {
             user = await dbm.find_user(id, pw);
@@ -46,14 +47,15 @@ function strategy() {
         finally {
             if(user)  done(null, {id, pw});
             else      done(null, false)
+            logger.info("ram.local_verify" + runtime.end());
         }
     }
 
     async function jwtVerify(payload, done) {
 
-        logger.info("ram.jwt_verify");
-
         let user = false;
+
+        runtime.start();
 
         try {
             user = await dbm.find("USERINFOTABLE", "USER_ID", payload.id);
@@ -65,6 +67,7 @@ function strategy() {
         finally {
             if(!user)  done(null, false, {reason : "unvalid token"});
             else       done(null, user);
+            logger.info("ram.jwt_verify" + runtime.end());
         }
     }
 

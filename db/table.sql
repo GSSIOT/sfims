@@ -15,7 +15,7 @@ CREATE TABLE USERINFOTABLE (
     USER_PHONE      VARCHAR(20),
     USER_ADDRESS    VARCHAR(20),
     USER_REGISTER   VARCHAR(20),
-    USER_AUTHORITY  VARCHAR(20),
+    USER_AUTHORITY  VARCHAR(20)
 );
 
 CREATE TABLE ENVINFOTABLE (
@@ -23,29 +23,26 @@ CREATE TABLE ENVINFOTABLE (
     FARM_ID         VARCHAR(20),
     DATE            VARCHAR(20),
     TIME            VARCHAR(20),
-    IN_TEMP         VARCHAR(20),
-    IN_HUMI         VARCHAR(20),
-    CO2             VARCHAR(20),
-    LIGHT           VARCHAR(20),
-    SOLAR           VARCHAR(20),
-    LANDTEMP        VARCHAR(20),
-    LANDHUMI        VARCHAR(20),
-    LANDEC          VARCHAR(20),
-    LANDPH          VARCHAR(20),
-    WINDSPEED       VARCHAR(20),
+    TEMP            VARCHAR(20),
+    HUMID           VARCHAR(20),
+    DEWPOINT        VARCHAR(20),
+    RAIN            VARCHAR(20),
+    FLOW            VARCHAR(20),
+    RAIN_GAUGE      VARCHAR(20),
+    ACTINO          VARCHAR(20),
     WINDDIR         VARCHAR(20),
-    WEATHER         VARCHAR(20),
-    OUT_TEMP        VARCHAR(20),
-    OUT_HUMI        VARCHAR(20),
-    RAINFALL        VARCHAR(20),
-    WATERVOL        VARCHAR(20),
-    MOISTURE        VARCHAR(20),
-    HYDROVOL        VARCHAR(20),
-    HYDROCNT        VARCHAR(20),
-    HYDROPH         VARCHAR(20),
-    HYDROEC         VARCHAR(20),
-    HYDROPOWER      VARCHAR(20)
-    
+    WINDSPEED       VARCHAR(20),
+    VOLTAGE         VARCHAR(20),
+    CO2             VARCHAR(20),
+    EC              VARCHAR(20),
+    SOIL_HUM        VARCHAR(20),
+    MOTION          VARCHAR(20),
+    SMOKE           VARCHAR(20),
+    GAS             VARCHAR(20),
+    BRIGHT          VARCHAR(20),
+    DOOR            VARCHAR(20),
+    REMOTE          VARCHAR(20),
+    E_CURRENT       VARCHAR(20)
 );
 
 CREATE TABLE SENSORINFOTABLE (
