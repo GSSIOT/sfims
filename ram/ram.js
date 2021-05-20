@@ -31,9 +31,9 @@ ram.prototype.init = function () {
         strategy();
     
         this.app.use("/", require("./router/index"));
-        this.app.listen("1235", function () { resolve(); });
+        this.app.listen(`${process.env.SVR_PORT}`, function () { resolve(); });
 
-        logger.info("ram.init")
+        logger.info(`ram.init ${process.env.SVR_PORT}`)
     });
 }
 

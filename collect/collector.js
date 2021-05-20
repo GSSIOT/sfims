@@ -45,13 +45,14 @@ collector.prototype.init = async function () {
  */
  collector.prototype.collect = async function () {
 
-    let result  = false;
+    let result  = true;
 
     runtime.start();
 
     try {
         farmEnv = await this.get_data("data", -1);
         farmEnv = this.standardize_data(farmEnv);
+        console.log(farmEnv);
         
         for(let value of farmEnv) {
             result &= await dbm.insert("INSERT INTO ENVINFOTABLE VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", value);
