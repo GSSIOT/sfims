@@ -1,3 +1,3 @@
 
 
-C:/Users/GSSIOT/Desktop/문서/101 개발 코드/02 node/sfims/db/db.sql
+C:\Users\Administrator\Documents\sfims-main\sfims-main\db\db.sql
