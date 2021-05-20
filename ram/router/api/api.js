@@ -7,6 +7,7 @@ const statusGen     = require("../../statusgenerator");
 const {logger}      = require("../../../server/winston");
 const farmData      = require("../../../farmdata");
 const runtime       = require("../../../runtime");
+const { ConsoleTransportOptions } = require("winston/lib/winston/transports");
 
 
 
@@ -34,7 +35,8 @@ const runtime       = require("../../../runtime");
     }
  
     try {
-        rows = await dbm.select(`SELECT ${sensorType} FROM ENVDAYAVG WHERE FARM_ID = '${farmId1}' OR FARM_ID = ${farmId2} AND DATE >= ${startDate} AND DATE <= ${endDate}`);
+        rows = await dbm.select(`SELECT FARM_ID, TIME ,${sensorType} FROM ENVDAYAVG WHERE FARM_ID = '${farmId1}' OR FARM_ID = '${farmId2}' AND DATE >= '${startDate}' AND DATE <= '${endDate}'`);
+        console.log(row);
     }
     catch(error) {
         logger.error(error);
@@ -71,7 +73,7 @@ const runtime       = require("../../../runtime");
     }
  
     try {
-        rows = await dbm.select(`SELECT ${sensorType} FROM ENVHOURAVG WHERE FARM_ID = '${farmId1}' OR FARM_ID = ${farmId2} AND DATE >= ${startDate} AND DATE <= ${endDate}`);
+        rows = await dbm.select(`SELECT FARM_ID, TIME, ${sensorType} FROM ENVHOURAVG WHERE FARM_ID = '${farmId1}' OR FARM_ID = '${farmId2}' AND DATE >= '${startDate}' AND DATE <= '${endDate}'`);
     }
     catch(error) {
         logger.error(error);
@@ -106,7 +108,7 @@ const runtime       = require("../../../runtime");
     }
  
     try {
-        rows = await dbm.select(`SELECT ${sensorType} FROM ENVHOURAVG WHERE FARM_ID = '${farmId}' AND DATE >= ${startDate} AND DATE <= ${endDate}`);
+        rows = await dbm.select(`SELECT ${sensorType} FROM ENVHOURAVG WHERE FARM_ID = '${farmId}' AND DATE >= '${startDate}' AND DATE <= '${endDate}'`);
     }
     catch(error) {
         logger.error(error);
@@ -141,7 +143,7 @@ const runtime       = require("../../../runtime");
     }
  
     try {
-        rows = await dbm.select(`SELECT ${sensorType} FROM ENVDAYAVG WHERE FARM_ID = '${farmId}' AND DATE >= ${startDate} AND DATE <= ${endDate}`);
+        rows = await dbm.select(`SELECT ${sensorType} FROM ENVDAYAVG WHERE FARM_ID = '${farmId}' AND DATE >= '${startDate}' AND DATE <= '${endDate}'`);
     }
     catch(error) {
         logger.error(error);
@@ -176,7 +178,7 @@ const runtime       = require("../../../runtime");
     }
  
     try {
-        rows = await dbm.select(`SELECT * FROM ENVDAYAVG WHERE FARM_ID = '${farmId}' AND DATE >= ${startDate} AND DATE <= ${endDate}`);
+        rows = await dbm.select(`SELECT * FROM ENVDAYAVG WHERE FARM_ID = '${farmId}' AND DATE >= '${startDate}' AND DATE <= '${endDate}'`);
     }
     catch(error) {
         logger.error(error);
@@ -212,7 +214,7 @@ const runtime       = require("../../../runtime");
     }
  
     try {
-        rows = await dbm.select(`SELECT * FROM ENVDAYAVG WHERE FARM_ID = '${farmId}' AND DATE >= ${startDate} AND DATE <= ${endDate}`);
+        rows = await dbm.select(`SELECT * FROM ENVDAYAVG WHERE FARM_ID = '${farmId}' AND DATE >= '${startDate}' AND DATE <= '${endDate}'`);
     }
     catch(error) {
         logger.error(error);

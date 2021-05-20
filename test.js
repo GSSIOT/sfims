@@ -122,15 +122,11 @@ function test() {
     
         method : "POST",
         json   : true,
-<<<<<<< HEAD
-        uri    : "http://localhost:1235/api/env",
-        headers: { "x-signature" : hmac.get_signature("POST", date.toString(), "http://localhost:1235/api/env"), "x-accesskey" : "GSSIOT", "x-date" : date.toString()},
-=======
-        uri    : "http://192.168.0.2:3030/data",
-        headers: { "x-signature" : hmac.get_signature("POST", date.toString(), "http://192.168.0.2:3030/data"), "x-accesskey" : "GSSIOT", "x-date" : date.toString()},
->>>>>>> a4582eeb6269b7700875e59cc5a75b23cb7fc84c
+        uri    : "http://gssiot.iptime.org:7777/api/env",
+        headers: { "x-signature" : hmac.get_signature("POST", date.toString(), "http://gssiot.iptime.org:7777/api/env"), "x-accesskey" : "GSSIOT", "x-date" : date.toString()},
         body : {
-            Farmid : "4",
+            user_id : "gssiot",
+            farm_id : "1",
         }
 
     },function(error, res, body) {
@@ -166,8 +162,6 @@ test();
 //         ws.send("data");
 //     })
 // });
-<<<<<<< HEAD
-=======
 
 
 // var d = new Date();
@@ -177,4 +171,3 @@ test();
 
 
 // console.log(h);
->>>>>>> a4582eeb6269b7700875e59cc5a75b23cb7fc84c
