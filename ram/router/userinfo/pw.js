@@ -7,6 +7,7 @@ const dbm           = require("../../../db/dbm");
 const jwt           = require("jsonwebtoken");
 const {logger}      = require("../../../server/winston");
 const runtime       = require("../../../runtime");
+const check_parma   = require("../../checkparma");
 const { handle_email_auth_request, handle_email_token_request } = require("./emailauth");
 
 
@@ -21,13 +22,19 @@ const { handle_email_auth_request, handle_email_token_request } = require("./ema
  */
 async function handle_password_change_request(req, res, next) {
  
-    let id     = req.body.id;
-    let pw     = req.body.pw;
+    let id     = req.body.user_id;
+    let pw     = req.body.user_pw;
     let same   = true;
     let result = null;
     
+    if(!check_param(id, pw)) {
+        res.send({statusCode : 101, statusMessage : "비밀번호 변경 실패"});
+        logger.info("ram.handle_password_change_request" + runtime.end());
+    }
+
     try {
         same = await dbm.check_user_password(id, pw);
+        console.log(same);
         if(!same)  result = await dbm.update(`UPDATE USERINFOTABLE SET USER_PW = '${pw}' WHERE USER_ID = '${id}'`);
     }
     catch(error) {
