@@ -7,7 +7,6 @@ const statusGen     = require("../../statusgenerator");
 const {logger}      = require("../../../server/winston");
 const farmData      = require("../../../farmdata");
 const runtime       = require("../../../runtime");
-const { ConsoleTransportOptions } = require("winston/lib/winston/transports");
 
 
 
@@ -28,15 +27,16 @@ const { ConsoleTransportOptions } = require("winston/lib/winston/transports");
 
     runtime.start();
 
-    if(!farmId1 || farmId2 || !sensorType || !startDate || !endDate) {
-        res.send({statusCode : 301, statusMessage : "데이터 전송 실패"});
+    console.log(req.body);
+
+    if(!farmId1 || !farmId2 || !sensorType || !startDate || !endDate) {
+        res.send({statusCode : 301, statusMessage : "데이터 전송 실패!!!!"});
         logger.info("ram.handle_env_compare_day_request" + runtime.end());
         return;
     }
  
     try {
         rows = await dbm.select(`SELECT FARM_ID, DATE, TIME ,${sensorType} FROM ENVDAYAVG WHERE FARM_ID = '${farmId1}' OR FARM_ID = '${farmId2}' AND DATE >= '${startDate}' AND DATE <= '${endDate}'`);
-        console.log(row);
     }
     catch(error) {
         logger.error(error);
@@ -99,10 +99,11 @@ const { ConsoleTransportOptions } = require("winston/lib/winston/transports");
     let farmId     = req.body.farm_id;
     let startDate  = req.body.start_date;
     let endDate    = req.body.end_date;
+    let sensorType = req.body.sensor_type;
 
     runtime.start();
 
-    if(!farmId || !startDate || !endDate) {
+    if(!farmId || !startDate || !sensorType || !endDate) {
         res.send({statusCode : 301, statusMessage : "데이터 전송 실패"});
         return;
     }
@@ -137,7 +138,7 @@ const { ConsoleTransportOptions } = require("winston/lib/winston/transports");
 
     runtime.start();
 
-    if(!farmId || !startDate || !endDate) {
+    if(!farmId || !startDate || sensorType || !endDate) {
         res.send({statusCode : 301, statusMessage : "데이터 전송 실패"});
         return;
     }
