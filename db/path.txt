@@ -1,3 +1,3 @@
 
 
-C:\Users\Administrator\Documents\sfims-main\sfims-main\db\db.sql
+C:/Users/lalal/Desktop/개발/01 농협대학교/sfims/db/db.sql

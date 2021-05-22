@@ -61,24 +61,24 @@ function handle_email_auth_request(req, res, next) {
         // 비밀번호 변경(비인가 토큰)
         if(error && req.url == "/pw/change") {
             logger.error(error);
-            res.json(statusGen(253, "password change failed because invalid signature"));
+            res.send(statusGen(253, "password change failed because invalid signature"));
         }
         // 이메일 인증
         if(error && req.url == "/pw/emailauth") {
             logger.error(error);
-            res.json(statusGen(233, "invalid signature!"));
+            res.send(statusGen(233, "invalid signature!"));
         }
         // 비밀번호 변경(이메일 주소 다름)
         if(decode && req.url == "/pw/change") {
-            decode.email == userEmail ? next() : res.json(statusGen(254, "password change failed because invalid email"));
+            logger.info("ram.handle_email_auth_request" + runtime.end());
+            decode.email == userEmail ? next() : res.send(statusGen(254, "password change failed because invalid email"));
         }
         // 이메일 인증
         if(decode && req.url == "/pw/emailauth") {
-            decode.email == userEmail ? res.json(statusGen(232, "email authentication success")) : res.json(statusGen(234, "invalid email"));
+            logger.info("ram.handle_email_auth_request" + runtime.end());
+            decode.email == userEmail ? res.send(statusGen(232, "email authentication success")) : res.send(statusGen(234, "invalid email"));
         }
     });
-
-    logger.info("ram.handle_email_auth_request" + runtime.end())
 }
 
 

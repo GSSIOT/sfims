@@ -122,11 +122,10 @@ function test() {
     
         method : "POST",
         json   : true,
-        uri    : "http://gssiot.iptime.org:7777/api/env",
-        headers: { "x-signature" : hmac.get_signature("POST", date.toString(), "http://gssiot.iptime.org:7777/api/env"), "x-accesskey" : "GSSIOT", "x-date" : date.toString()},
+        uri    : "http://192.168.0.2:3030/data",
+        headers: { "x-signature" : hmac.get_signature("POST", date.toString(), "http://192.168.0.2:3030/data"), "x-accesskey" : "GSSIOT", "x-date" : date.toString()},
         body : {
-            user_id : "gssiot",
-            farm_id : "1",
+            Farmid : "4",
         }
 
     },function(error, res, body) {

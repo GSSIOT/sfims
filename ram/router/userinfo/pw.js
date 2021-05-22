@@ -7,7 +7,7 @@ const dbm           = require("../../../db/dbm");
 const jwt           = require("jsonwebtoken");
 const {logger}      = require("../../../server/winston");
 const runtime       = require("../../../runtime");
-const check_parma   = require("../../checkparma");
+const check_param   = require("../../checkparma");
 const { handle_email_auth_request, handle_email_token_request } = require("./emailauth");
 
 
@@ -30,6 +30,7 @@ async function handle_password_change_request(req, res, next) {
     if(!check_param(id, pw)) {
         res.send({statusCode : 101, statusMessage : "비밀번호 변경 실패"});
         logger.info("ram.handle_password_change_request" + runtime.end());
+        return;
     }
 
     try {
