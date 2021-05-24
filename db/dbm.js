@@ -24,26 +24,11 @@ function dbm () {
  */
 dbm.prototype.init = async function () {
 
-    let result;
-    
     runtime.start();
-    this.pool = mariadb.createPool(config);
-
+    
     try {
+        this.pool = mariadb.createPool(config);
         this.conn = await this.pool.getConnection();
-        return this.conn;
-        
-        // result    = await this.conn.query("INSERT ERROR", dummy);
-        // if(result.warningStatus)  throw new Error("INSERT ERROR");
-
-        // result    = await this.conn.query("SELECT");
-        // if(result != dummy)  throw new Error("SELECT ERROR");
-
-        // result    = await this.conn.query("UPDATE");
-        // if(result.warningStatus)  throw new Error("UPDATE ERROR");
-
-        // result    = await this.conn.query("DELETE");
-        // if(result.warningStatus)  throw new Error("DELETE ERROR");
     }
     catch(error) {
         logger.error(error);
@@ -177,6 +162,7 @@ dbm.prototype.select = async function (query) {
     try {
         this.conn = await this.pool.getConnection();
         result    = await this.conn.query(query);
+        console.log(result);
     }
     catch(error) {
         logger.error(error);
@@ -267,6 +253,31 @@ dbm.prototype.check_user_authority = async function (userId, farmId) {
     }
 }
 
+
+
+/**
+ * 
+ * @param {*} userId 
+ * @param {*} userPw 
+ * @returns 
+ */
+dbm.prototype.check_user_password = async function (userId, userPw) {
+
+    let rows = null;
+
+    runtime.start();
+
+    try {
+        rows = await this.select(`SELECT count(*) AS count FROM USERINFOTABLE WHERE USER_ID = '${userId}' AND USER_PW = '${userPw}'`);
+    }
+    catch(error) {
+        logger.error(error);
+    }
+    finally {
+        logger.info("dbm.check_user_password" + runtime.end());
+        return rows[0]['count'] > 0 ? true : false;
+    }
+}
 
 
 module.exports = new dbm();
