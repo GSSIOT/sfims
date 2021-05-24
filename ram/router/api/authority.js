@@ -1,7 +1,8 @@
-const {logger}  = require("../../../server/winston");
-const statusGen = require("../../statusgenerator");
-const dbm       = require("../../../db/dbm");
-const runtime   = require("../../../runtime");
+const {logger}    = require("../../../server/winston");
+const statusGen   = require("../../statusgenerator");
+const dbm         = require("../../../db/dbm");
+const runtime     = require("../../../runtime");
+const check_param = require("../../checkparma");
 
 
 /**
@@ -22,7 +23,7 @@ const runtime   = require("../../../runtime");
 
     if(req.url.indexOf("compare") < 0) {
         try {
-            if(farmId || userId) {
+            if(!check_param(userId, farmId)) {
                 authority = await dbm.check_user_authority(userId, farmId);
             }
         }
@@ -38,7 +39,7 @@ const runtime   = require("../../../runtime");
 
     else {
         try {
-            if(farmId1 || farmId2 || userId) {
+            if(!check_param(farmId1, farmId2 , userId)) {
                 authority &= await dbm.check_user_authority(userId, farmId1);
                 authority &= await dbm.check_user_authority(userId, farmId2);
             }

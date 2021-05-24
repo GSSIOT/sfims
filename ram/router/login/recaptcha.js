@@ -1,8 +1,9 @@
-const request   = require("request");
-const dotenv    = require("dotenv").config({path : "../../../../.env"});
-const statusGen = require("../../statusgenerator");
-const {logger}  = require("../../../server/winston");
-const runtime = require("../../../runtime");
+const request     = require("request");
+const dotenv      = require("dotenv").config({path : "../../../../.env"});
+const statusGen   = require("../../statusgenerator");
+const {logger}    = require("../../../server/winston");
+const runtime     = require("../../../runtime");
+const check_param = require("../../checkparma")
 
 
 /**
@@ -13,17 +14,27 @@ const runtime = require("../../../runtime");
  */
 function recaptcha(req, res, next) {
 
-    let payload = {
+    let payload  = null;
+    let recpatch = req.body['recpatcha'];
+
+    runtime.start();
+
+    if(!check_param(recpatch) + runtime.end()) {
+        logger.info("ram.recaptcha.request");
+        res.send({statusCode : 104, statusMessage : "recaptcha authentication failed"});
+        return;
+    }
+
+    payload = {
         method  : "POST",
         uri     : "https://www.google.com/recaptcha/api/siteverify",
         headers : { "Content-Type" : "application/x-www-form-url-urlencoded" },
         form    : {
             secret   : process.env.RCT_SECRET_KEY,
-            response : req.body['recaptcha'],
+            response : recpatch,
         },
     };
 
-    runtime.start();
 
     request(payload, function(error, response, body) {
 
@@ -32,7 +43,7 @@ function recaptcha(req, res, next) {
         const success = JSON.parse(body)["success"];
 
         if(error)     res.json(statusGen(002, `HTTP ERROR : ${error.message}`));
-        if(!success)  res.json(statusGen(104, "recaptcha authentication failed"));
+        if(!success)  res.json(statusGen(105, "recaptcha authentication failed"));
         else          next();
         
     })

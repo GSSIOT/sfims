@@ -28,7 +28,7 @@ async function handle_password_change_request(req, res, next) {
     let result = null;
     
     if(!check_param(id, pw)) {
-        res.send({statusCode : 101, statusMessage : "비밀번호 변경 실패"});
+        res.send({statusCode : 101, statusMessage : "요청 파리미터 잘못됨"});
         logger.info("ram.handle_password_change_request" + runtime.end());
         return;
     }
@@ -50,7 +50,8 @@ async function handle_password_change_request(req, res, next) {
 
 
 
-router.post("/pw/emailauth", handle_email_token_request);
+router.post("/pw/emailtoken", handle_email_token_request);
+router.post("/pw/emailauth", handle_email_auth_request);
 router.post("/pw/change", handle_email_auth_request, handle_password_change_request);
 
 module.exports = router;

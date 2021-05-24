@@ -20,15 +20,14 @@ const { handle_email_auth_request, handle_email_token_request } = require("./ema
  */
 async function handle_id_change_request(req, res, next) {
  
-    let id     = req.body.user_id;
     let name   = req.body.user_name;
     let phone  = req.body.user_phone;
     let result = null;
     
     runtime.start();
 
-    if(!check_param(id, name, phone)) {
-        res.send({statusCode : 101, statusMessage : "아이디 찾기 실패"});
+    if(!check_param(name, phone)) {
+        res.send({statusCode : 101, statusMessage : "요청 파라미터 잘못됨"});
         logger.info("ram.handle_id_change_request" + runtime.end());
         return;
     }

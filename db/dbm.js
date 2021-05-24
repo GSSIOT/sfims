@@ -162,7 +162,7 @@ dbm.prototype.select = async function (query) {
     try {
         this.conn = await this.pool.getConnection();
         result    = await this.conn.query(query);
-        console.log(result);
+        //console.log(result);
     }
     catch(error) {
         logger.error(error);
@@ -280,4 +280,28 @@ dbm.prototype.check_user_password = async function (userId, userPw) {
 }
 
 
+
+/**
+ * 
+ * @param {*} userId 
+ * @param {*} userPw 
+ * @returns 
+ */
+ dbm.prototype.check_user_email = async function (userId, userEmail) {
+
+    let rows = null;
+
+    runtime.start();
+
+    try {
+        rows = await this.select(`SELECT count(*) AS count FROM USERINFOTABLE WHERE USER_ID = '${userId}' AND USER_EMAIL = '${userEmail}'`);
+    }
+    catch(error) {
+        logger.error(error);
+    }
+    finally {
+        logger.info("dbm.check_user_eamil" + runtime.end());
+        return rows[0]['count'] > 0 ? true : false;
+    }
+}
 module.exports = new dbm();

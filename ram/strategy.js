@@ -13,8 +13,8 @@ const runtime        = require("../runtime");
 function strategy() {
 
     const localConfig = {
-        usernameField : "id",
-        passwordField : "pw"
+        usernameField : "user_id",
+        passwordField : "user_pw"
     }
 
     const jwtConfig = {
@@ -53,20 +53,20 @@ function strategy() {
 
     async function jwtVerify(payload, done) {
 
-        let user = false;
+        let user = null;
 
         runtime.start();
 
         try {
-            user = await dbm.find("USERINFOTABLE", "USER_ID", payload.id);
+            user = await dbm.select(`SELECT USER_ID, USER_NAME, USER_EMAIL, USER_PHONE, USER_AUTHORITY FROM USERINFOTABLE WHERE USER_ID = '${payload.id}'`);
         }
         catch(error) {
             logger.error(error);
             done(error, false);
         }
         finally {
-            if(!user)  done(null, false, {reason : "unvalid token"});
-            else       done(null, user);
+            if(!user[0]["USER_ID"])  done(null, false, {reason : "unvalid token"});
+            else                     done(null, user[0]);
             logger.info("ram.jwt_verify" + runtime.end());
         }
     }
