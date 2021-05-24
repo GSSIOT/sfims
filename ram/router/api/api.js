@@ -7,7 +7,6 @@ const statusGen     = require("../../statusgenerator");
 const {logger}      = require("../../../server/winston");
 const farmData      = require("../../../farmdata");
 const runtime       = require("../../../runtime");
-const { ConsoleTransportOptions } = require("winston/lib/winston/transports");
 
 
 
