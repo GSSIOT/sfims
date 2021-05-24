@@ -110,7 +110,7 @@ const check_param   = require("../../checkparma")
     }
  
     try {
-        rows = await dbm.select(`SELECT DATE, ${sensorType} FROM ENVHOURAVG WHERE FARM_ID = '${farmId}' AND DATE >= '${startDate}' AND DATE <= '${endDate}'`);
+        rows = await dbm.select(`SELECT DATE, TIME, ${sensorType} FROM ENVHOURAVG WHERE FARM_ID = '${farmId}' AND DATE >= '${startDate}' AND DATE <= '${endDate}'`);
     }
     catch(error) {
         logger.error(error);
@@ -145,7 +145,7 @@ const check_param   = require("../../checkparma")
     }
  
     try {
-        rows = await dbm.select(`SELECT DATE, ${sensorType} FROM ENVDAYAVG WHERE FARM_ID = '${farmId}' AND DATE >= '${startDate}' AND DATE <= '${endDate}'`);
+        rows = await dbm.select(`SELECT DATE, TIME, ${sensorType} FROM ENVDAYAVG WHERE FARM_ID = '${farmId}' AND DATE >= '${startDate}' AND DATE <= '${endDate}'`);
     }
     catch(error) {
         logger.error(error);
@@ -180,7 +180,7 @@ const check_param   = require("../../checkparma")
     }
  
     try {
-        rows = await dbm.select(`SELECT DATE, ${sensorType} FROM ENVDAYAVG WHERE FARM_ID = '${farmId}' AND DATE >= '${startDate}' AND DATE <= '${endDate}'`);
+        rows = await dbm.select(`SELECT DATE, TIME, ${sensorType} FROM ENVDAYAVG WHERE FARM_ID = '${farmId}' AND DATE >= '${startDate}' AND DATE <= '${endDate}'`);
     }
     catch(error) {
         logger.error(error);
@@ -216,7 +216,7 @@ const check_param   = require("../../checkparma")
     }
  
     try {
-        rows = await dbm.select(`SELECT DATE, ${sensorType} FROM ENVDAYAVG WHERE FARM_ID = '${farmId}' AND DATE >= '${startDate}' AND DATE <= '${endDate}'`);
+        rows = await dbm.select(`SELECT DATE, TIME, ${sensorType} FROM ENVDAYAVG WHERE FARM_ID = '${farmId}' AND DATE >= '${startDate}' AND DATE <= '${endDate}'`);
     }
     catch(error) {
         logger.error(error);
@@ -227,7 +227,6 @@ const check_param   = require("../../checkparma")
         logger.info("ram.handle_env_statics_month_request" + runtime.end());
     }
 }
-
 
 
 

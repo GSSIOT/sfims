@@ -6,6 +6,7 @@ const runtime     = require("../../../runtime");
 const check_param = require("../../checkparma")
 
 
+
 /**
  * @abstract
  * @param {*} req 
@@ -15,12 +16,12 @@ const check_param = require("../../checkparma")
 function recaptcha(req, res, next) {
 
     let payload  = null;
-    let recpatch = req.body['recpatcha'];
+    let _recaptcha = req.body['recaptcha'];
 
     runtime.start();
 
-    if(!check_param(recpatch) + runtime.end()) {
-        logger.info("ram.recaptcha.request");
+    if(!check_param(_recaptcha)) {
+        logger.info("ram.recaptcha.request" + runtime.end());
         res.send({statusCode : 104, statusMessage : "recaptcha authentication failed"});
         return;
     }
@@ -31,7 +32,7 @@ function recaptcha(req, res, next) {
         headers : { "Content-Type" : "application/x-www-form-url-urlencoded" },
         form    : {
             secret   : process.env.RCT_SECRET_KEY,
-            response : recpatch,
+            response : _recaptcha,
         },
     };
 

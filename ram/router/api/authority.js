@@ -5,13 +5,14 @@ const runtime     = require("../../../runtime");
 const check_param = require("../../checkparma");
 
 
+
 /**
  * 
  * @param {*} req 
  * @param {*} res 
  * @param {*} next 
  */
- async function handle_authority_request(req, res, next) {
+ async function authority_env_request(req, res, next) {
 
     let authority = true;
     let userId    = req.body.user_id;
@@ -57,4 +58,18 @@ const check_param = require("../../checkparma");
 
 
 
-module.exports = handle_authority_request
+/**
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ */
+ async function authority_user_request(req, res, next) {
+
+    
+    
+}
+
+
+
+module.exports = authority_env_request
