@@ -17,8 +17,8 @@ const runtime   = require("../../../runtime");
 function login(req, res, next) {
     passport.authenticate("local", function(error, user, info) {
 
-        let _jwt = jwt.sign({id : user.id}, process.env.JWT_SECRET_KEY);
-
+        let _jwt = jwt.sign({id : user.id, auth : user.authority}, process.env.JWT_SECRET_KEY);
+        
         runtime.start();
 
         if(!user) {

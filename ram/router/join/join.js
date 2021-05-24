@@ -1,11 +1,11 @@
 const express   = require("express");
-const router    = express.Router();
-const statusGen = require("../../statusgenerator");
-const dotenv    = require("dotenv").config({path : "../../../.env"});
-const dbm       = require("../../../db/dbm");
-const {logger}  = require("../../../server/winston");
-const runtime   = require("../../../runtime");
-
+const router      = express.Router();
+const statusGen   = require("../../statusgenerator");
+const dotenv      = require("dotenv").config({path : "../../../.env"});
+const dbm         = require("../../../db/dbm");
+const {logger}    = require("../../../server/winston");
+const runtime     = require("../../../runtime");
+const check_param = require("../../checkparma");
 
 function json_to_array(json) {
 
@@ -36,7 +36,7 @@ async function join(req, res, next) {
 
     runtime.start();
 
-    if(user || email) {
+    if(check_param(email, result)) {
         statusMessage  = user  ? "ID IN USE" : "";
         statusMessage += email ? " EMAIL IN USE" : "";
         res.json(statusGen(909, statusMessage));

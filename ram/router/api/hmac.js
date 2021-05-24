@@ -4,6 +4,7 @@ const statusGen = require("../../statusgenerator");
 const hmac      = require("../../../collect/hmac");
 const runtime   = require("../../../runtime");
 const {logger}  = require("../../../server/winston");
+const check_param = require("../../checkparma");
 
 function message_authentication(req, res, next) {
 
@@ -16,7 +17,7 @@ function message_authentication(req, res, next) {
     runtime.start();
     logger.info("ram.message_authentication" + runtime.end());
 
-    if(!date || !accessKey || !signature)  return res.send(statusGen(204, "Request Format Error"));
+    if(!check_param(date, accessKey, signature))  return res.send(statusGen(204, "Request Format Error"));
     if(hmac.get_signature(method, date, url) == signature) {
         next();
     }
