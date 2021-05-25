@@ -7,7 +7,8 @@ const statusGen     = require("../../statusgenerator");
 const {logger}      = require("../../../server/winston");
 const farmData      = require("../../../farmdata");
 const runtime       = require("../../../runtime");
-const check_param   = require("../../checkparma")
+const check_param   = require("../../checkparma");
+const {authority_env_request ,authority_manipulation_request} = require("./authority");
 
 
 
@@ -284,15 +285,14 @@ async function handle_dev_request(req, res, next) {
     }
 
     try {
-        rows = await dbm.select(`SELECT * FROM DEVINFOTABLE WHERE FARM_ID = '${farmId}' ORDER BY DESC TIME LIMIT 1`);
-        console.log(rows);
+        rows = await dbm.select(`SELECT * FROM DEVINFOTABLE WHERE FARM_ID = '${farmId}'`);
     }
     catch(error) {
         logger.error(error);
     }
     finally {
         if(!rows)  res.send({statusCode : 300, statusMessage : "데이터 전송 실패"});
-        else       res.send({statusCode : 301, statusMessage : "데이터 전송 성공", payload : rows[0]});
+        else       res.send({statusCode : 301, statusMessage : "데이터 전송 성공", payload : rows});
         logger.info("ram.handle_dev_request" + runtime.end());
     }
 }
@@ -308,40 +308,18 @@ async function handle_dev_request(req, res, next) {
 async function handle_user_request(req, res, next) {
     
     runtime.start();
-
-    passport.authenticate("jwt", {session : false}, async function(error, user, info) {
-        
-        let rows = null;
-        
-        if(error) {
-            res.json(statusGen(0  , "server error"));
-            return;
-        }
-
-        if(!user) {
-            res.json(statusGen(201, "authentication failed"));
-            return;
-        }  
-        
-        if(user["USER_AUTHORITY"] == "admin") {
-            try {
-                rows = await dbm.select("SELECT USER_ID, USER_NAME, USER_EMAIL, USER_PHONE, USER_AUTHORITY FROM USERINFOTABLE");
-            }
-            catch(error) {
-                logger.error(error)
-            }
-            finally {
-                if(!rows)  res.send({statusCode : 000, statusMessage : "데이터 전송 실패"});
-                else       res.send({statusCode : 001, statusMessage : "데이터 전송 성공", payload : rows})
-                logger.info("ram.handle_user_request" + runtime.end());
-            }
-        }   
-
-        else {
-            res.send({statusCode : 000, statusMessage : "권한 없음"});
-        }
+ 
+    try {
+        rows = await dbm.select(`SELECT * FROM USERINFOTABLE`);
+    }
+    catch(error) {
+        logger.error(error);
+    }
+    finally {
+        if(!rows)  res.send({statusCode : 300, statusMessage : "데이터 전송 실패"});
+        else       res.send({statusCode : 301, statusMessage : "데이터 전송 성공", payload : rows});
         logger.info("ram.handle_user_request" + runtime.end());
-    })(req, res, next);
+    }
 }
 
 
@@ -352,55 +330,30 @@ async function handle_user_request(req, res, next) {
  * @param {*} res 
  * @param {*} next 
  */
- async function handle_user_update_request(req, res, next) {
+ async function handle_user_promote_request(req, res, next) {
 
-    let userId        = req.body.user_id || null;
-    let userAuthority = req.body.user_authority || null;
+    let userId = req.body.user_id;
 
     runtime.start();
-
-    if(!check_param(userId, userAuthority)) {
-        res.send({statusCode : 000, statusMessage : "변경 실패"});
-        logger.info("ram.handle_user_update_request" + runtime.end());
+ 
+    if(!check_param(userId)) {
+        res.send({statusCode : 301, statusMessage : "데이터 전송 실패"});
+        logger.info("ram.handle_user_promote_request" + runtime.end())
         return;
-    } 
+    }
 
-    passport.authenticate("jwt", {session : false}, async function(error, user, info) {
-        
-        let rows = null;
-        
-        if(error) {
-            res.json(statusGen(0  , "server error"));   
-            return;
-        }
-
-        if(!user) {
-            res.json(statusGen(201, "authentication failed"));
-            return;
-        }
-        
-        if(user["USER_AUTHORITY"] == "admin") {
-            try {
-                    console.log(userAuthority)
-                    rows = await dbm.update(`UPDATE USERINFOTABLE SET USER_AUTHORITY = '${userAuthority}' WHERE USER_ID = ${userId}`);
-                    
-                }
-            catch(error) {
-                logger.error(error)
-            }
-            finally {
-                if(!rows)  res.send({statusCode : 000, statusMessage : "변경 실패"});
-                else       res.send({statusCode : 001, statusMessage : "변경 성공"});
-                logger.info("ram.handle_user_update_request" + runtime.end());
-            }
-        }   
-
-        else {
-            res.send({statusCode : 000, statusMessage : "권한 없음"});
-        }
-
-        logger.info("ram.handle_user_update_request" + runtime.end());
-    })(req, res, next);
+    try {
+        rows = await dbm.update(`UPDATE USERINFOTABLE SET USER_AUTHORITY = "admin" WHERE USER_ID = '${userId}'`);
+        console.log(rows[0]);
+    }
+    catch(error) {
+        logger.error(error);
+    }
+    finally {
+        if(!rows)  res.send({statusCode : 300, statusMessage : "데이터 전송 실패"});
+        else       res.send({statusCode : 301, statusMessage : "데이터 전송 성공"});
+        logger.info("ram.handle_user_promote_request" + runtime.end());
+    }
 }
 
 
@@ -412,56 +365,119 @@ async function handle_user_request(req, res, next) {
  * @param {*} next 
  */
  async function handle_user_remove_request(req, res, next) {
-    passport.authenticate("jwt", {session : false}, async function(error, user, info) {
-        
-        let rows = null;
-        runtime.start();
-        
-        if(error) {
-            res.json(statusGen(0  , "server error"));
-            return;
-        }    
+   
+    let userId = req.body.user_id;
 
-        if(!user) {
-            res.json(statusGen(201, "authentication failed"));
-            return;
-        }
+    runtime.start();
+ 
+    if(!check_param(userId)) {
+        res.send({statusCode : 301, statusMessage : "데이터 전송 실패"});
+        logger.info("ram.handle_user_remove_request" + runtime.end())
+        return;
+    }
 
-        if(user["USER_AUTHORITY"] == "admin") {
-            try {
-                rows = await dbm.select("SELECT USER_ID, USER_NAME, USER_EMAIL, USER_PHONE, USER_AUTHORITY FROM USERINFOTABLE");
-            }
-            catch(error) {
-                logger.error(error)
-            }
-            finally {
-                if(!rows)  res.send({statusCode : 000, statusMessage : "데이터 전송 실패"});
-                else       res.send({statusCode : 001, statusMessage : "데이터 전송 성공", payload : rows[0]})
-                logger.info("ram.handle_user_request" + runtime.end());
-            }
-        }   
-
-        else {
-            res.send({statusCode : 000, statusMessage : "권한 없음"});
-        }
-
-        logger.info("ram.handle_user_request" + runtime.end());
-    })(req, res, next);
+    try {
+        rows = await dbm.delete(`DELETE FROM USERINFOTABLE WHERE USER_ID = '${userId}'`);
+        console.log(rows);
+    }
+    catch(error) {
+        logger.error(error);
+    }
+    finally {
+        if(!rows)  res.send({statusCode : 300, statusMessage : "데이터 전송 실패"});
+        else       res.send({statusCode : 301, statusMessage : "데이터 전송 성공"});
+        logger.info("ram.handle_user_remove_request" + runtime.end());
+    }
 }
 
 
 
-router.post("/api/env/compare-hour", handle_env_compare_hour_request);
-router.post("/api/env/compare-day", handle_env_compare_day_request);
-router.post("/api/env/avg-hour", handle_env_avg_hour_request);
-router.post("/api/env/avg-day", handle_env_avg_day_request);
-router.post("/api/env/avg-week", handle_env_avg_week_request);
-router.post("/api/env/avg-month", handle_env_avg_month_request);
-router.post("/api/env", handle_env_request);
-router.post("/api/dev", handle_dev_request);
-router.post("/api/user", handle_user_request);
-router.post("/api/user/update", handle_user_update_request);
-router.post("/api/user/remove", handle_user_remove_request);
+/**
+ * @abstract
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ */
+ async function handle_dev_add_request(req, res, next) {
+    
+    let rows      = null;
+    let farmId    = req.body.farm_id;
+    let devType   = req.body.dev_type;
+    let devName   = req.body.dev_name;
+    let devMaker  = req.body.dev_maker;
+
+    runtime.start();
+ 
+    if(!check_param(farmId, farmId, devType, devName, devMaker)) {
+        res.send({statusCode : 301, statusMessage : "요청 파라미터 잘못됨"});
+        logger.info("ram.handle_dev_add_request" + runtime.end())
+        return;
+    }
+
+    try {
+        rows = await dbm.insert(`INSERT INTO DEVINFOTABLE VALUES(?,?,?,?,?)`, [0, farmId, devType, devName, devMaker]);
+        console.log(rows);
+    }
+    catch(error) {
+        logger.error(error);
+    }
+    finally {
+        if(!rows)  res.send({statusCode : 300, statusMessage : "데이터 입력 실패"});
+        else       res.send({statusCode : 301, statusMessage : "데이터 입력 성공"});
+        logger.info("ram.handle_dev_add_request" + runtime.end());
+    }
+}
+
+
+
+/**
+ * @abstract
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ */
+ async function handle_dev_remove_request(req, res, next) {
+    
+    let devId = req.body.dev_id;
+
+    runtime.start();
+
+    if(!check_param(devId)) {
+        res.send({statusCode : 301, statusMessage : "요청 파라미터 잘못됨"});
+        logger.info("ram.handle_dev_remove_request" + runtime.end());
+        return;
+    }
+
+    try {
+        rows = await dbm.delete(`DELETE FROM DEVINFOTABLE WHERE DEV_ID = '${devId}'`);
+        console.log(rows);
+    }
+    catch(error) {
+        logger.error(error);
+    }
+    finally {
+        if(!rows)  res.send({statusCode : 300, statusMessage : "데이터 삭제 실패"});
+        else       res.send({statusCode : 301, statusMessage : "데이터 삭제 성공"});
+        logger.info("ram.handle_dev_remove_request" + runtime.end());
+    }
+
+}
+
+
+
+router.post("/api/env/compare-hour", authority_env_request, handle_env_compare_hour_request);
+router.post("/api/env/compare-day", authority_env_request, handle_env_compare_day_request);
+router.post("/api/env/avg-hour", authority_env_request, handle_env_avg_hour_request);
+router.post("/api/env/avg-day", authority_env_request, handle_env_avg_day_request);
+router.post("/api/env/avg-week", authority_env_request, handle_env_avg_week_request);
+router.post("/api/env/avg-month", authority_env_request, handle_env_avg_month_request);
+router.post("/api/env", authority_env_request, handle_env_request);
+router.post("/api/dev", authority_manipulation_request, handle_dev_request);
+router.post("/api/user", authority_manipulation_request, handle_user_request);
+router.post("/api/user/promote", authority_manipulation_request, handle_user_promote_request);
+router.post("/api/user/remove", authority_manipulation_request, handle_user_remove_request);
+router.post("/api/dev/add", authority_manipulation_request, handle_dev_add_request);
+router.post("/api/dev/remove", authority_manipulation_request, handle_dev_remove_request);
 
 
 

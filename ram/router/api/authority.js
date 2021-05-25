@@ -3,6 +3,8 @@ const statusGen   = require("../../statusgenerator");
 const dbm         = require("../../../db/dbm");
 const runtime     = require("../../../runtime");
 const check_param = require("../../checkparma");
+const express     = require("express");
+const passport    = require("passport");
 
 
 
@@ -72,4 +74,35 @@ const check_param = require("../../checkparma");
 
 
 
-module.exports = authority_env_request
+
+async function authority_manipulation_request(req, res, next) {
+
+    passport.authenticate("jwt", {session : false}, async function(error, user, info) {
+        
+        runtime.start();
+        
+        if(error) {
+            res.json(statusGen(0  , "server error"));
+            return;
+        }    
+
+        if(!user) {
+            res.json(statusGen(201, "authentication failed"));
+            return;
+        }
+
+        if(user["USER_AUTHORITY"] == "admin") {
+            next();
+        }   
+
+        else {
+            res.send({statusCode : 000, statusMessage : "권한 없음"});
+        }
+
+        logger.info("ram.authority_manipulation_request" + runtime.end());
+    })(req, res, next);
+}
+
+
+
+module.exports = {authority_env_request, authority_manipulation_request}
