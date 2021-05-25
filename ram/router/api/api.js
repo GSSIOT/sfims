@@ -101,17 +101,16 @@ const {authority_env_request ,authority_manipulation_request} = require("./autho
     let farmId     = req.body.farm_id;
     let startDate  = req.body.start_date;
     let endDate    = req.body.end_date;
-    let sensorType = req.body.sensor_type;
 
     runtime.start();
 
-    if(!check_param(farmId, startDate, endDate, sensorType)) {
+    if(!check_param(farmId, startDate, endDate)) {
         res.send({statusCode : 301, statusMessage : "데이터 전송 실패"});
         return;
     }
  
     try {
-        rows = await dbm.select(`SELECT DATE, TIME, ${sensorType} FROM ENVHOURAVG WHERE FARM_ID = '${farmId}' AND DATE >= '${startDate}' AND DATE <= '${endDate}'`);
+        rows = await dbm.select(`SELECT * FROM ENVHOURAVG WHERE FARM_ID = '${farmId}' AND DATE >= '${startDate}' AND DATE <= '${endDate}'`);
     }
     catch(error) {
         logger.error(error);
@@ -136,17 +135,16 @@ const {authority_env_request ,authority_manipulation_request} = require("./autho
     let farmId     = req.body.farm_id;
     let startDate  = req.body.start_date;
     let endDate    = req.body.end_date;
-    let sensorType = req.body.sensor_type;
 
     runtime.start();
 
-    if(!check_param(farmId, startDate, endDate, sensorType)) {
+    if(!check_param(farmId, startDate, endDate)) {
         res.send({statusCode : 301, statusMessage : "데이터 전송 실패"});
         return;
     }
  
     try {
-        rows = await dbm.select(`SELECT DATE, TIME, ${sensorType} FROM ENVDAYAVG WHERE FARM_ID = '${farmId}' AND DATE >= '${startDate}' AND DATE <= '${endDate}'`);
+        rows = await dbm.select(`SELECT * FROM ENVDAYAVG WHERE FARM_ID = '${farmId}' AND DATE >= '${startDate}' AND DATE <= '${endDate}'`);
     }
     catch(error) {
         logger.error(error);
@@ -467,8 +465,8 @@ async function handle_user_request(req, res, next) {
 
 router.post("/api/env/compare-hour", authority_env_request, handle_env_compare_hour_request);
 router.post("/api/env/compare-day", authority_env_request, handle_env_compare_day_request);
-router.post("/api/env/avg-hour", authority_env_request, handle_env_avg_hour_request);
-router.post("/api/env/avg-day", authority_env_request, handle_env_avg_day_request);
+router.post("/api/env/avg-hour", /*authority_env_request,*/ handle_env_avg_hour_request);
+router.post("/api/env/avg-day", /*authority_env_request,*/ handle_env_avg_day_request);
 router.post("/api/env/avg-week", authority_env_request, handle_env_avg_week_request);
 router.post("/api/env/avg-month", authority_env_request, handle_env_avg_month_request);
 router.post("/api/env", authority_env_request, handle_env_request);
