@@ -2,89 +2,89 @@
 
 
 
-// // function test(a) {
-// //     return new Promise((resolve, reject) => {
-// //         if(a == 1)  resolve(1);
-// //         if(a != 1)  reject(new Error("hi"));
-// //     })
-// // }
-
-
-
-
-
-// // // async function aaaa(t) {
-
-// // //     try {
-// // //         let b = await test(t);
-// // //         return b;
-// // //     }
-
-// // //     catch(error) {
-// // //         console.log(error.message);
-// // //     }
-
+// // // function test(a) {
+// // //     return new Promise((resolve, reject) => {
+// // //         if(a == 1)  resolve(1);
+// // //         if(a != 1)  reject(new Error("hi"));
+// // //     })
 // // // }
 
-// // // async function aa() {
 
-// // //     try {
 
-// // //         let b = await aaaa(2);
-// // //         console.log(b);
-// // //     }
 
-// // //     catch(error) {
 
-// // //         console.log(error.message);
-// // //     }
+// // // // async function aaaa(t) {
+
+// // // //     try {
+// // // //         let b = await test(t);
+// // // //         return b;
+// // // //     }
+
+// // // //     catch(error) {
+// // // //         console.log(error.message);
+// // // //     }
+
+// // // // }
+
+// // // // async function aa() {
+
+// // // //     try {
+
+// // // //         let b = await aaaa(2);
+// // // //         console.log(b);
+// // // //     }
+
+// // // //     catch(error) {
+
+// // // //         console.log(error.message);
+// // // //     }
     
 
-// // // }
+// // // // }
 
-// // // aa();
+// // // // aa();
 
-// // // function func1(num) {
+// // // // function func1(num) {
 
-// // //     return new Promise((resolve, reject) => {
-// // //         setTimeout(() => {
-// // //             if(num == 1)  resolve(num);
-// // //             else          reject(new Error("error"));
-// // //         }, 1000);
-// // //     });
-// // // }
+// // // //     return new Promise((resolve, reject) => {
+// // // //         setTimeout(() => {
+// // // //             if(num == 1)  resolve(num);
+// // // //             else          reject(new Error("error"));
+// // // //         }, 1000);
+// // // //     });
+// // // // }
 
-// // // async function func2(num) {
+// // // // async function func2(num) {
 
-// // //     try {
-// // //         return await func1(num);
+// // // //     try {
+// // // //         return await func1(num);
 
-// // //     }
-// // //     catch(error) {
-// // //         throw error;
-// // //     }
-// // // }
+// // // //     }
+// // // //     catch(error) {
+// // // //         throw error;
+// // // //     }
+// // // // }
 
-// // // async function func3(num) {
+// // // // async function func3(num) {
 
-// // //     let x = await func2(num);
-// // //     console.log(x);
-// // // }
-
-
-// // // func3(1);
+// // // //     let x = await func2(num);
+// // // //     console.log(x);
+// // // // }
 
 
-
-// // // const bcrypt = require("./collect/bcrypt").create();
-// // // const hmac   = require("./collect/hmac").create();
-
-// // // // bcrypt.hash("fjdsafl;kdjsalk;fjsdalk;fjmsda;lkfjasd;lfjl;kadsfj;lkdsajf;lkdsajf;ldasjfiopej2q3poirjoikdsjamfokds;ajfl;kdsajflk;dsajfioewpqrjfdksa;fjiepoqjfdksa;lf")
-// // // //       .then(hashValue => console.log("bcrypt : ", hashValue));
+// // // // func3(1);
 
 
-// // // console.log(Date.now());
-// // // console.log("hmac : ", hmac.get_signature("POST", "https://gssiot.org"));
+
+// // // // const bcrypt = require("./collect/bcrypt").create();
+// // // // const hmac   = require("./collect/hmac").create();
+
+// // // // // bcrypt.hash("fjdsafl;kdjsalk;fjsdalk;fjmsda;lkfjasd;lfjl;kadsfj;lkdsajf;lkdsajf;ldasjfiopej2q3poirjoikdsjamfokds;ajfl;kdsajflk;dsajfioewpqrjfdksa;fjiepoqjfdksa;lf")
+// // // // //       .then(hashValue => console.log("bcrypt : ", hashValue));
+
+
+// // // // console.log(Date.now());
+// // // // console.log("hmac : ", hmac.get_signature("POST", "https://gssiot.org"));
 
 
 
@@ -135,40 +135,73 @@
 // }
 
 // test();
-// // // setInterval(() => { test(); }, 1000);
+// // // // setInterval(() => { test(); }, 1000);
 
-// // // //const request = require("request");
-// const request = require("request");
-// const dotenv = require("dotenv").config({path:".env"});
-// const payload = {
-//     method : "GET",
-//     url    : `http://api.openweathermap.org/data/2.5/weather?q=Goyang-si&appid=${process.env.WEATEHR_API_KEY}`
-// };
-// request(payload, function(error, response, body) {
-//     if(error) console.log(error);
-//     else console.log(JSON.parse(response.body));
-// }); 
+// // // // //const request = require("request");
+// // const request = require("request");
+// // const dotenv = require("dotenv").config({path:".env"});
+// // const payload = {
+// //     method : "GET",
+// //     url    : `http://api.openweathermap.org/data/2.5/weather?q=Goyang-si&appid=${process.env.WEATEHR_API_KEY}`
+// // };
+// // request(payload, function(error, response, body) {
+// //     if(error) console.log(error);
+// //     else console.log(JSON.parse(response.body));
+// // }); 
 
-// const WebSocketServer = require("ws").Server;
-// const wss = new WebSocketServer({port : 3001}, () => {console.log("wss is running")});
+// // const WebSocketServer = require("ws").Server;
+// // const wss = new WebSocketServer({port : 3001}, () => {console.log("wss is running")});
 
-// wss.on("connection", (ws) => {
+// // wss.on("connection", (ws) => {
     
-//     console.log("connected");
+// //     console.log("connected");
 
-//     ws.on("message", (message) => {
-//         console.log("data");
-//         ws.send("data");
-//     })
-// });
-
-
-// var d = new Date();
+// //     ws.on("message", (message) => {
+// //         console.log("data");
+// //         ws.send("data");
+// //     })
+// // });
 
 
-// var h = d.getHours() > 9 ? d.getHours(1) : '0' + d.getHours();
+// // var d = new Date();
 
 
+// // var h = d.getHours() > 9 ? d.getHours(1) : '0' + d.getHours();
+
+
+// // console.log(h);
+
+
+const mariadb = require("mariadb");
+
+
+const pool = mariadb.createPool({
+    host : "localhost",
+    port : 9999,
+    user : "root",
+    database : "SFIMS",
+    password : "gssiot"
+});
+
+async function connection() {
+
+    let conn;
+    let rows;
+
+    try {
+        conn = await pool.getConnection();
+        rows = conn.query("SELECT * FROM USERINFOTABLE");
+    }
+    catch(error) {
+        console.log(error);
+    }
+    finally {
+        conn.release();
+        console.log(rows);
+    }
+}
+
+<<<<<<< HEAD
 // console.log(h);
 const dotenv = require("dotenv").config({"path" : ".env"})
 const request = require("request");
@@ -190,3 +223,6 @@ request(payload, function(error, response, body) {
     console.log(body);
     
 })
+=======
+connection().then((rows) => {console.log(rows)});
+>>>>>>> a51a3b42017db990cc1c6fad27b2981d20bba0f3
