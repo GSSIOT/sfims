@@ -38,7 +38,7 @@ const {authority_env_request ,authority_manipulation_request} = require("./autho
     }
  
     try {
-        rows = await dbm.select(`SELECT FARM_ID, DATE, TIME ,${sensorType} FROM ENVDAYAVG WHERE FARM_ID = '${farmId1}' OR FARM_ID = '${farmId2}' AND DATE >= '${startDate}' AND DATE <= '${endDate}'`);
+        rows = await dbm.select(`SELECT FARM_ID, DATE, TIME ,${sensorType} FROM ENVDAYAVG WHERE (FARM_ID = '${farmId1}' OR FARM_ID = '${farmId2}') AND DATE >= '${startDate}' AND DATE <= '${endDate}'`);
     }
     catch(error) {
         logger.error(error);
