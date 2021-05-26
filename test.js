@@ -88,53 +88,53 @@
 
 
 
-const request = require("request");
-// const options = { method : "POST", json : true};
-const cryptoJS = require("crypto-js");
-const dotenv   = require("dotenv").config({path : "../../../.env"});
-const xmlToJson = require("xml-js");
-const hmac      = require("./collect/hmac");
+// const request = require("request");
+// // const options = { method : "POST", json : true};
+// const cryptoJS = require("crypto-js");
+// const dotenv   = require("dotenv").config({path : "../../../.env"});
+// const xmlToJson = require("xml-js");
+// const hmac      = require("./collect/hmac");
 
 
-function test() {
+// function test() {
 
-    // let newSignatrue = undefined;
-    // let secretKey    = "GSSIOT";
-    // let method       = "POST";
-    // let space        = " ";
-    // let newLine      = "\n";
-    // //let hmac         = cryptoJS.algo.HMAC.create(cryptoJS.algo.SHA256, secretKey);
-    // let host         = `http://localhost:1234/api/env`;
-    let date         = Date.now().toString();
+//     // let newSignatrue = undefined;
+//     // let secretKey    = "GSSIOT";
+//     // let method       = "POST";
+//     // let space        = " ";
+//     // let newLine      = "\n";
+//     // //let hmac         = cryptoJS.algo.HMAC.create(cryptoJS.algo.SHA256, secretKey);
+//     // let host         = `http://localhost:1234/api/env`;
+//     let date         = Date.now().toString();
 
-    // hmac.update(method);
-    // hmac.update(space);
-    // hmac.update(host);
-    // hmac.update(newLine);
-    // hmac.update(date);
-    // hmac.update(newLine);
-    // hmac.update("GSSIOT");
+//     // hmac.update(method);
+//     // hmac.update(space);
+//     // hmac.update(host);
+//     // hmac.update(newLine);
+//     // hmac.update(date);
+//     // hmac.update(newLine);
+//     // hmac.update("GSSIOT");
     
-    // const hash   = hmac.finalize();
-    // newSignature = hash.toString(cryptoJS.enc.Base64);
+//     // const hash   = hmac.finalize();
+//     // newSignature = hash.toString(cryptoJS.enc.Base64);
 
-    request({
+//     request({
     
-        method : "POST",
-        json   : true,
-        uri    : "http://192.168.0.2:3030/data",
-        headers: { "x-signature" : hmac.get_signature("POST", date.toString(), "http://192.168.0.2:3030/data"), "x-accesskey" : "GSSIOT", "x-date" : date.toString()},
-        body : {
-            Farmid : "4",
-        }
+//         method : "POST",
+//         json   : true,
+//         uri    : "http://192.168.0.2:3030/data",
+//         headers: { "x-signature" : hmac.get_signature("POST", date.toString(), "http://192.168.0.2:3030/data"), "x-accesskey" : "GSSIOT", "x-date" : date.toString()},
+//         body : {
+//             Farmid : "4",
+//         }
 
-    },function(error, res, body) {
-        if(error) console.log(error.message);
-        console.log("body", body);
-    })
-}
+//     },function(error, res, body) {
+//         if(error) console.log(error.message);
+//         console.log("body", body);
+//     })
+// }
 
-test();
+// test();
 // // // setInterval(() => { test(); }, 1000);
 
 // // // //const request = require("request");
@@ -170,3 +170,23 @@ test();
 
 
 // console.log(h);
+const dotenv = require("dotenv").config({"path" : ".env"})
+const request = require("request");
+const payload = {
+    method  : "POST",
+    uri     : "https://www.google.com/recaptcha/api/siteverify",
+    headers : { "Content-Type" : "application/x-www-form-url-urlencoded" },
+    form    : {
+        secret   : process.env.RCT_SECRET_KEY,
+        response : "03AGdBq24keVZce7Pqm0IrdngDgsAHXpCshNIbK95C7RGvTek67icHv6KY6WJ_MI7b_JVTQcWZPGwJ2BIyn8Ywz9r1Moc_NJwITU-_2jxdCmh79lOynHDqa2zL07UJoVLOK8ri57yqSOFQO54lh9T6h5hfObVOKXXzRvAq1R7V4M_g4RvX7WN-8KN9dl8dZE3LUzBfq-NIigxhaqdRoS3PsXjnBXcyOgFAHetkAqSU62apLpj10NKSXTIeHP3ZJdwehACv6JdP9ePYlQGTGxLvXwV8zWw7aqcauXKRFLIRlukfmc6Etc3uOyE8YpJpwbVRNGkbrJBfGvdcZQh75NGK29pYFwxL_2b6eFKfe9pTsbXRESreT0USeaPPfWjzs2-QcU9Uj6xB4wSlVcxdYHgWJ9Q6ffuJ2jMvFE4N1vvvY_nT6wj9_os32ZYyd5ISp7ip6bTYnOa_u9z7",
+    },
+};
+
+
+request(payload, function(error, response, body) {
+
+    const success = JSON.parse(body)["success"];
+
+    console.log(body);
+    
+})
