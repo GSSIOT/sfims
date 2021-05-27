@@ -1,9 +1,8 @@
 const mariadb  = require("mariadb");
 const config   = require("./config");
 const math     = require("math");
-const errorGen = require("../error");
 const {logger} = require("../server/winston");
-const runtime  = require("../runtime");
+const runtime  = require("../server/runtime");
 
 
 

@@ -6,7 +6,7 @@ const jwt            = require("passport-jwt");
 const jwtStrategy    = require("passport-jwt").Strategy;
 const localStrategy  = require("passport-local").Strategy;
 const {logger}       = require("../server/winston");
-const runtime        = require("../runtime");
+const runtime        = require("../server/runtime");
 
 
 

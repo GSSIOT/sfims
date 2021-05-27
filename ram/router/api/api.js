@@ -5,8 +5,7 @@ const dbm           = require("../../../db/dbm");
 const router        = express.Router();
 const statusGen     = require("../../statusgenerator");
 const {logger}      = require("../../../server/winston");
-const farmData      = require("../../../farmdata");
-const runtime       = require("../../../runtime");
+const runtime       = require("../../../server/runtime");
 const check_param   = require("../../checkparma");
 const {authority_env_request ,authority_manipulation_request} = require("./authority");
 
@@ -38,7 +37,7 @@ const {authority_env_request ,authority_manipulation_request} = require("./autho
     }
  
     try {
-        rows = await dbm.select(`SELECT FARM_ID, DATE, TIME ,${sensorType} FROM ENVDAYAVG WHERE FARM_ID = '${farmId1}' OR FARM_ID = '${farmId2}' AND DATE >= '${startDate}' AND DATE <= '${endDate}'`);
+        rows = await dbm.select(`SELECT FARM_ID, DATE, TIME ,${sensorType} FROM ENVDAYAVG WHERE (FARM_ID = '${farmId1}' OR FARM_ID = '${farmId2}') AND DATE >= '${startDate}' AND DATE <= '${endDate}'`);
     }
     catch(error) {
         logger.error(error);
@@ -75,7 +74,7 @@ const {authority_env_request ,authority_manipulation_request} = require("./autho
     }
  
     try {
-        rows = await dbm.select(`SELECT FARM_ID, DATE, TIME, ${sensorType} FROM ENVHOURAVG WHERE FARM_ID = '${farmId1}' OR FARM_ID = '${farmId2}' AND DATE >= '${startDate}' AND DATE <= '${endDate}'`);
+        rows = await dbm.select(`SELECT FARM_ID, DATE, TIME, ${sensorType} FROM ENVHOURAVG WHERE (FARM_ID = '${farmId1}' OR FARM_ID = '${farmId2}') AND DATE >= '${startDate}' AND DATE <= '${endDate}'`);
     }
     catch(error) {
         logger.error(error);
@@ -179,7 +178,7 @@ const {authority_env_request ,authority_manipulation_request} = require("./autho
     }
  
     try {
-        rows = await dbm.select(`SELECT DATE, TIME, ${sensorType} FROM ENVDAYAVG WHERE FARM_ID = '${farmId}' AND DATE >= '${startDate}' AND DATE <= '${endDate}'`);
+        rows = await dbm.select(`SELECT DATE, TIME, ${sensorType} FROM ENVWEEKAVG WHERE FARM_ID = '${farmId}' AND DATE >= '${startDate}' AND DATE <= '${endDate}'`);
     }
     catch(error) {
         logger.error(error);
@@ -215,7 +214,7 @@ const {authority_env_request ,authority_manipulation_request} = require("./autho
     }
  
     try {
-        rows = await dbm.select(`SELECT DATE, TIME, ${sensorType} FROM ENVDAYAVG WHERE FARM_ID = '${farmId}' AND DATE >= '${startDate}' AND DATE <= '${endDate}'`);
+        rows = await dbm.select(`SELECT DATE, TIME, ${sensorType} FROM ENVMONTHAVG WHERE FARM_ID = '${farmId}' AND DATE >= '${startDate}' AND DATE <= '${endDate}'`);
     }
     catch(error) {
         logger.error(error);

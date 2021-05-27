@@ -1,9 +1,9 @@
 const request  = require("request");
 const dotenv   = require("dotenv").config({path:"../.env"});
-const errorGen = require("../../../error");
+const errorGen = require("../../../server/error");
 const {logger} = require("../../../server/winston");
 const express  = require("express");
-const runtime  = require("../../../runtime");
+const runtime  = require("../../../server/runtime");
 const router   = express.Router();
 
 

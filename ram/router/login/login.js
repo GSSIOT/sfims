@@ -5,7 +5,7 @@ const jwt       = require("jsonwebtoken");
 const statusGen = require("../../statusgenerator");
 const dotenv    = require("dotenv").config({path : "../../../.env"});
 const {logger}  = require("../../../server/winston");
-const runtime   = require("../../../runtime");
+const runtime   = require("../../../server/runtime");
 
 
 /**

@@ -1,7 +1,7 @@
 const {logger}    = require("../../../server/winston");
 const statusGen   = require("../../statusgenerator");
 const dbm         = require("../../../db/dbm");
-const runtime     = require("../../../runtime");
+const runtime     = require("../../../server/runtime");
 const check_param = require("../../checkparma");
 const express     = require("express");
 const passport    = require("passport");
@@ -57,21 +57,6 @@ const passport    = require("passport");
         }
     }
 }
-
-
-
-/**
- * 
- * @param {*} req 
- * @param {*} res 
- * @param {*} next 
- */
- async function authority_user_request(req, res, next) {
-
-    
-    
-}
-
 
 
 

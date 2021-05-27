@@ -2,7 +2,7 @@ const cryptoJS  = require("crypto-js");
 const dotenv    = require("dotenv").config({path : "../../../.env"});
 const statusGen = require("../../statusgenerator");
 const hmac      = require("../../../collect/hmac");
-const runtime   = require("../../../runtime");
+const runtime   = require("../../../server/runtime");
 const {logger}  = require("../../../server/winston");
 const check_param = require("../../checkparma");
 

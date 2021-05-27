@@ -1,6 +1,6 @@
 const request  = require("request");
 const dotenv   = require("dotenv").config({path:"../.env"});
-const errorGen = require("../error");
+const errorGen = require("../server/error");
 
 /**
  * 

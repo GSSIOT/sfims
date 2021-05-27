@@ -24,6 +24,7 @@
     "jsonwebtoken": "^8.5.1",
     "mariadb": "^2.5.3",
     "math": "0.0.3",
+    "node-rtsp-stream": "0.0.9",
     "nodemailer": "^6.5.0",
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",
