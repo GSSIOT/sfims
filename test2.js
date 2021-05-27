@@ -1,23 +1,12 @@
-const Websocket = require("ws");
-const ws = new Websocket("ws://localhost:3001");
+const express = require("express");
+const { ConsoleTransportOptions } = require("winston/lib/winston/transports");
+
+const app = express();
 
 
-const readline = require("readline");
-const rl = readline.createInterface({
-    input  : process.stdin,
-    output : process.stdout
-});
+app.listen("1235", () => {console.log("server running")});
 
-
-ws.on("message", function(data) {
-    console.log(data);
+app.get("/test", function(req, res) {
+    console.log(req);
+    res.send("hi");
 })
-
-
-rl.on("line", function(line) {
-    ws.send(line);
-})
-
-
-
-

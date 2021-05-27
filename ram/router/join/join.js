@@ -9,6 +9,7 @@ const check_param = require("../../checkparma");
 
 function json_to_array(json) {
 
+    console.log(json);
     let ret = [];
 
     for(let prop in json) {

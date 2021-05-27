@@ -75,6 +75,10 @@ const {authority_env_request ,authority_manipulation_request} = require("./autho
  
     try {
         rows = await dbm.select(`SELECT FARM_ID, DATE, TIME, ${sensorType} FROM ENVHOURAVG WHERE (FARM_ID = '${farmId1}' OR FARM_ID = '${farmId2}') AND DATE >= '${startDate}' AND DATE <= '${endDate}'`);
+<<<<<<< HEAD
+=======
+        console.log(rows);
+>>>>>>> fbbdc604d330d7a43f0b46fffa65640e3b7d947f
     }
     catch(error) {
         logger.error(error);
@@ -278,11 +282,12 @@ async function handle_dev_request(req, res, next) {
     if(!check_param(farmId)) {
         res.send({statusCode : 301, statusMessage : "데이터 전송 실패"});
         logger.info("ram.handle_dev_request" + runtime.end())
-        return;
+        return;n
     }
 
     try {
         rows = await dbm.select(`SELECT * FROM DEVINFOTABLE WHERE FARM_ID = '${farmId}'`);
+
     }
     catch(error) {
         logger.error(error);
@@ -405,7 +410,7 @@ async function handle_user_request(req, res, next) {
 
     runtime.start();
  
-    if(!check_param(farmId, farmId, devType, devName, devMaker)) {
+    if(!check_param(farmId, devType, devName, devMaker)) {
         res.send({statusCode : 301, statusMessage : "요청 파라미터 잘못됨"});
         logger.info("ram.handle_dev_add_request" + runtime.end())
         return;

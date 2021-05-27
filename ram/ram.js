@@ -33,7 +33,7 @@ ram.prototype.init = function () {
         this.app.use("/", require("./router/index"));
         this.app.listen(`${process.env.SVR_PORT}`, function () { resolve(); });
 
-        logger.info(`ram.init ${process.env.SVR_PORT}`)
+        logger.info(`ram.init ${process.env.SVR_HOST}`)
     });
 }
 
