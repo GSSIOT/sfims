@@ -6,6 +6,7 @@ const router        = express.Router();
 const statusGen     = require("../../statusgenerator");
 const {logger}      = require("../../../server/winston");
 const runtime       = require("../../../server/runtime");
+const time          = require("../api/time");
 const check_param   = require("../../checkparma");
 const {authority_env_request ,authority_manipulation_request} = require("./authority");
 
@@ -75,10 +76,7 @@ const {authority_env_request ,authority_manipulation_request} = require("./autho
  
     try {
         rows = await dbm.select(`SELECT FARM_ID, DATE, TIME, ${sensorType} FROM ENVHOURAVG WHERE (FARM_ID = '${farmId1}' OR FARM_ID = '${farmId2}') AND DATE >= '${startDate}' AND DATE <= '${endDate}'`);
-<<<<<<< HEAD
-=======
         console.log(rows);
->>>>>>> fbbdc604d330d7a43f0b46fffa65640e3b7d947f
     }
     catch(error) {
         logger.error(error);
@@ -467,10 +465,235 @@ async function handle_user_request(req, res, next) {
 
 
 
+/**
+ * @abstract
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ */
+ async function handle_crop_info_request(req, res, next) {
+    
+    let farmId = req.body.farm_id;
+
+    runtime.start();
+
+    if(!check_param(farmId)) {
+        res.send({statusCode : 301, statusMessage : "요청 파라미터 잘못됨"});
+        logger.info("ram.handle_crop_info_request" + runtime.end());
+        return;
+    }
+
+    try {
+        rows = await dbm.select(`SELECT * FROM CROPINFOTABLE WHERE FARM_ID = '${farmId}'`);
+        console.log(rows);
+    }
+    catch(error) {
+        logger.error(error);
+    }
+    finally {
+        if(!rows)  res.send({statusCode : 300, statusMessage : "데이터 조회 실패"});
+        else       res.send({statusCode : 301, statusMessage : "데이터 조회 성공", payload : rows});
+        logger.info("ram.handle_crop_info_request" + runtime.end());
+    }
+
+}
+
+
+
+/**
+ * @abstract
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ */
+ async function handle_crop_info_add_request(req, res, next) {
+    
+    let farmId   = req.body.farm_id;
+    let cropType = req.body.crop_type;
+
+    runtime.start();
+
+    if(!check_param(farmId, cropType)) {
+        res.send({statusCode : 301, statusMessage : "요청 파라미터 잘못됨"});
+        logger.info("ram.handle_crop_info_add_request" + runtime.end());
+        return;
+    }
+
+    try {
+        rows = await dbm.insert(`INSERT INTO CROPINFOTABLE VALUES(?,?)`, [farmId, cropType]);
+        console.log(rows);
+    }
+    catch(error) {
+        logger.error(error);
+    }
+    finally {
+        if(!rows)  res.send({statusCode : 300, statusMessage : "데이터 추가 실패"});
+        else       res.send({statusCode : 301, statusMessage : "데이터 추가 성공"});
+        logger.info("ram.handle_crop_info_add_request" + runtime.end());
+    }
+
+}
+
+
+
+
+/**
+ * @abstract
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ */
+ async function handle_crop_info_remove_request(req, res, next) {
+    
+    let farmId   = req.body.farm_id;
+    let cropType = req.body.crop_type;
+
+    runtime.start();
+
+    if(!check_param(farmId, cropType)) {
+        res.send({statusCode : 301, statusMessage : "요청 파라미터 잘못됨"});
+        logger.info("ram.handle_crop_info_remove_request" + runtime.end());
+        return;
+    }
+
+    try {
+        rows = await dbm.delete(`DELETE FROM CROPINFOTABLE WHERE FARM_ID = '${farmId}' AND CROP_TYPE = '${cropType}'`);
+        console.log(rows);
+    }
+    catch(error) {
+        logger.error(error);
+    }
+    finally {
+        if(!rows)  res.send({statusCode : 300, statusMessage : "데이터 삭제 실패"});
+        else       res.send({statusCode : 301, statusMessage : "데이터 삭제 성공"});
+        logger.info("ram.handle_crop_info_remove_request" + runtime.end());
+    }
+
+}
+
+
+
+/**
+ * @abstract
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ */
+ async function handle_crop_growth_info_request(req, res, next) {
+     
+    let farmId   = req.body.farm_id;
+    let cropType = req.body.crop_type;
+    let sectorId = req.body.sector_id;
+
+    runtime.start();
+
+    if(!check_param(farmId, cropType, sectorId)) {
+        res.send({statusCode : 301, statusMessage : "요청 파라미터 잘못됨"});
+        logger.info("ram.handle_crop_growth_info_request" + runtime.end());
+        return;
+    }
+
+    try {
+        rows = await dbm.select(`SELECT * FROM GROWTHINFOTABLE WHERE FARM_ID = '${farmId}' AND CROP_TYPE = '${cropType}' AND SECTOR_ID = '${sectorId}'`);
+        console.log(rows);
+    }
+    catch(error) {
+        logger.error(error);
+    }
+    finally {
+        if(!rows)  res.send({statusCode : 300, statusMessage : "데이터 조회 실패"});
+        else       res.send({statusCode : 301, statusMessage : "데이터 조회 성공", payload : rows});
+        logger.info("ram.handle_crop_growth_info_request" + runtime.end());
+    }
+}
+
+
+
+/**
+ * @abstract
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ */
+ async function handle_crop_growth_add_request(req, res, next) {
+    
+    let date            = time();
+    let farmId          = req.body.farm_id;
+    let cropType        = req.body.crop_type;    
+    let sectorId        = req.body.sector_id;
+    let cropLeafLong    = req.body.crop_leaf_long;
+    let cropLeafCnt     = req.body.crop_leaf_cnt;
+    let cropFruitWeight = req.body.crop_fruit_weight;
+    let cropFruitWidth  = req.body.crop_fruit_width;
+    let cropFruitHeight = req.body.crop_fruit_height;
+    let cropFruitSugar  = req.body.crop_fruit_sugar;
+    let cropFruitAcid   = req.body.crop_fruit_acid;
+
+    runtime.start();
+
+    if(!check_param(farmId, cropType, sectorId, cropLeafLong, cropLeafCnt, cropFruitWeight, cropFruitWidth, cropFruitHeight, cropFruitSugar, cropFruitAcid)) {
+        res.send({statusCode : 301, statusMessage : "요청 파라미터 잘못됨"});
+        logger.info("ram.handle_crop_growth_add_request" + runtime.end());
+        return;
+    }
+
+    try {
+        rows = await dbm.insert(`INSERT INTO GROWTHINFOTABLE VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)`, [0 ,date[0], date[1], farmId, cropType, sectorId, cropLeafLong, cropLeafCnt, cropFruitWeight, cropFruitWidth, cropFruitHeight, cropFruitSugar, cropFruitAcid]);
+        console.log(rows, date);
+    }
+    catch(error) {
+        logger.error(error);
+    }
+    finally {
+        if(!rows)  res.send({statusCode : 300, statusMessage : "데이터 입력 실패"});
+        else       res.send({statusCode : 301, statusMessage : "데이터 입력 성공"});
+        logger.info("ram.handle_crop_growth_add_request" + runtime.end());
+    }
+
+}
+
+
+
+/**
+ * @abstract
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ */
+ async function handle_crop_growth_remove_request(req, res, next) {
+    
+    let index = req.body.index;
+
+    runtime.start();
+
+    if(!check_param(index)) {
+        res.send({statusCode : 301, statusMessage : "요청 파라미터 잘못됨"});
+        logger.info("ram.handle_crop_growth_remove_request" + runtime.end());
+        return;
+    }
+
+    try {
+        rows = await dbm.delete(`DELETE FROM GROWTHINFOTABLE WHERE IDX = '${index}'`);
+        console.log(rows);
+    }
+    catch(error) {
+        logger.error(error);
+    }
+    finally {
+        if(!rows)  res.send({statusCode : 300, statusMessage : "데이터 삭제 실패"});
+        else       res.send({statusCode : 301, statusMessage : "데이터 삭제 성공"});
+        logger.info("ram.handle_crop_growth_remove_request" + runtime.end());
+    }
+
+}
+
+
+
+
 router.post("/api/env/compare-hour", authority_env_request, handle_env_compare_hour_request);
 router.post("/api/env/compare-day", authority_env_request, handle_env_compare_day_request);
-router.post("/api/env/avg-hour", /*authority_env_request,*/ handle_env_avg_hour_request);
-router.post("/api/env/avg-day", /*authority_env_request,*/ handle_env_avg_day_request);
+router.post("/api/env/avg-hour", authority_env_request, handle_env_avg_hour_request);
+router.post("/api/env/avg-day", authority_env_request, handle_env_avg_day_request);
 router.post("/api/env/avg-week", authority_env_request, handle_env_avg_week_request);
 router.post("/api/env/avg-month", authority_env_request, handle_env_avg_month_request);
 router.post("/api/env", authority_env_request, handle_env_request);
@@ -480,7 +703,12 @@ router.post("/api/user/promote", authority_manipulation_request, handle_user_pro
 router.post("/api/user/remove", authority_manipulation_request, handle_user_remove_request);
 router.post("/api/dev/add", authority_manipulation_request, handle_dev_add_request);
 router.post("/api/dev/remove", authority_manipulation_request, handle_dev_remove_request);
-
+router.post("/api/cropinfo", authority_manipulation_request, handle_crop_info_request);
+router.post("/api/cropinfo/add", authority_manipulation_request, handle_crop_info_add_request);
+router.post("/api/cropinfo/remove", authority_manipulation_request, handle_crop_info_remove_request);
+router.post("/api/cropgrowth", authority_manipulation_request, handle_crop_growth_info_request);
+router.post("/api/cropgrowth/add", authority_manipulation_request, handle_crop_growth_add_request);
+router.post("/api/cropgrowth/remove", authority_manipulation_request, handle_crop_growth_remove_request);
 
 
 module.exports = router;

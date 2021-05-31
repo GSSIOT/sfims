@@ -7,8 +7,4 @@ COPY ./db/table.sql /docker-entrypoint-initdb.d/
 COPY ./db/view.sql /docker-entrypoint-initdb.d/
 
 
-RUN apt-get update
-RUN apt-get upgrade
-RUN apt-get vim
-
 

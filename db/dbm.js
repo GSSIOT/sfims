@@ -112,7 +112,7 @@ dbm.prototype.delete = async function (query) {
     }
     finally {
         this.conn.release();
-        logger.info("dbm.delete" + runtime.end);
+        logger.info("dbm.delete" + runtime.end());
         if(result)  return true;
         else        return false;
     }
