@@ -4,3 +4,6 @@ log
 *.log
 test.js
 test2.js
+sfims-linux
+sfims-macos
+sfims-win.exe

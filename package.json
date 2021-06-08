@@ -3,9 +3,18 @@
   "version": "1.0.0",
   "description": "sfims server",
   "main": "main.js",
+  "bin": {
+    "bin": "main.js"
+  },
+  "pkg": {
+    "assets": [
+      "/node_modules/**/*"
+    ]
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node main.js"
+    "start": "node main.js",
+    "build": "pkg ."
   },
   "author": "",
   "license": "ISC",
@@ -29,7 +38,6 @@
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
-    "pm2": "^4.5.6",
     "request": "^2.88.2",
     "shallow-equal": "^1.2.1",
     "winston": "^3.3.3",
@@ -37,6 +45,7 @@
     "xml-js": "^1.6.11"
   },
   "devDependencies": {
-    "artillery": "^1.7.2"
+    "artillery": "^1.7.2",
+    "pkg": "^5.2.1"
   }
 }

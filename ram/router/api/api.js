@@ -583,18 +583,18 @@ async function handle_user_request(req, res, next) {
      
     let farmId   = req.body.farm_id;
     let cropType = req.body.crop_type;
-    let sectorId = req.body.sector_id;
+    // let sectorId = req.body.sector_id;
 
     runtime.start();
 
-    if(!check_param(farmId, cropType, sectorId)) {
+    if(!check_param(farmId, cropType)) {
         res.send({statusCode : 301, statusMessage : "요청 파라미터 잘못됨"});
         logger.info("ram.handle_crop_growth_info_request" + runtime.end());
         return;
     }
 
     try {
-        rows = await dbm.select(`SELECT * FROM GROWTHINFOTABLE WHERE FARM_ID = '${farmId}' AND CROP_TYPE = '${cropType}' AND SECTOR_ID = '${sectorId}'`);
+        rows = await dbm.select(`SELECT * FROM GROWTHINFOTABLE WHERE FARM_ID = '${farmId}' AND CROP_TYPE = '${cropType}'`);
         console.log(rows);
     }
     catch(error) {
