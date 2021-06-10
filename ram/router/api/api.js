@@ -250,7 +250,7 @@ async function handle_env_request(req, res, next) {
     }
  
     try {
-        rows = await dbm.select(`SELECT * FROM ENVINFOTABLE WHERE FARM_ID = '${farmId}' ORDER BY TIME DESC LIMIT 1`);
+        rows = await dbm.select(`SELECT * FROM ENVINFOTABLE WHERE FARM_ID = '${farmId}' ORDER BY DATE DESC, TIME DESC LIMIT 1`);
     }
     catch(error) {
         logger.error(error);
