@@ -2,7 +2,7 @@ const request     = require("request");
 const dotenv      = require("dotenv").config({path : "../../../../.env"});
 const statusGen   = require("../../statusgenerator");
 const {logger}    = require("../../../server/winston");
-const runtime     = require("../../../runtime");
+const runtime     = require("../../../server/runtime");
 const check_param = require("../../checkparma")
 
 

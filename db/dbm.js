@@ -1,9 +1,8 @@
 const mariadb  = require("mariadb");
 const config   = require("./config");
 const math     = require("math");
-const errorGen = require("../error");
 const {logger} = require("../server/winston");
-const runtime  = require("../runtime");
+const runtime  = require("../server/runtime");
 
 
 
@@ -113,7 +112,7 @@ dbm.prototype.delete = async function (query) {
     }
     finally {
         this.conn.release();
-        logger.info("dbm.delete" + runtime.end);
+        logger.info("dbm.delete" + runtime.end());
         if(result)  return true;
         else        return false;
     }

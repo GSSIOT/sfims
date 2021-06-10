@@ -11,7 +11,7 @@ const router  = express.Router();
  router.post("/id/*", require("./api/hmac"), require("./find/id"));
  router.post("/pw/*", require("./api/hmac"), require("./find/pw"));
  router.post("/join", require("./api/hmac"), require("./join/join"));
- router.post("/weather/*", /*require("./api/hmac"),*/ require("./api/weather"));
+ router.post("/weather/*", require("./api/hmac"), require("./api/weather"));
  
 
 module.exports = router;

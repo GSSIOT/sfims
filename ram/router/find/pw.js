@@ -6,7 +6,7 @@ const statusGen     = require("../../statusgenerator");
 const dbm           = require("../../../db/dbm");
 const jwt           = require("jsonwebtoken");
 const {logger}      = require("../../../server/winston");
-const runtime       = require("../../../runtime");
+const runtime       = require("../../../server/runtime");
 const check_param   = require("../../checkparma");
 const { handle_email_auth_request, handle_email_token_request } = require("./emailauth");
 

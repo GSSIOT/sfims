@@ -3,7 +3,7 @@ const passport  = require("passport");
 const router    = express.Router();
 const statusGen = require("../../statusgenerator");
 const {logger}  = require("../../../server/winston");
-const runtime   = require("../../../runtime")
+const runtime   = require("../../../server/runtime")
 
 /**
  * @abstract
