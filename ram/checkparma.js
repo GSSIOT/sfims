@@ -1,7 +1,7 @@
 function check_param() {
 
     for(let value of arguments) {
-        if(!value)  return false;
+        if(value == null)  return false;
     }
     return true;
 }

@@ -248,6 +248,7 @@ dbm.prototype.check_user_authority = async function (userId, farmId) {
     }
     finally {
         logger.info("dbm.check_user_authority" + runtime.end());
+        console.log("check_user_authority : ", rows[0]['auth'])
         return rows[0]['auth'] > 0 ? true : false;
     }
 }

@@ -36,7 +36,7 @@ async function join(req, res, next) {
 
     runtime.start();
 
-    if(check_param(email, result)) {
+    if(!check_param(email, result)) {
         statusMessage  = user  ? "ID IN USE" : "";
         statusMessage += email ? " EMAIL IN USE" : "";
         res.json(statusGen(909, statusMessage));
