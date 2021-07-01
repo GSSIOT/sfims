@@ -83,8 +83,8 @@ function get_weather(locate) {
          logger.error(error);
      }
      finally {
-         if (!weather) res.send({ statusCode: 300, statusMessage: "데이터 전송 실패" });
-         else res.send({ statusCode: 301, statusMessage: "데이터 전송 성공", payload: weather });
+         if (!weather) res.send({ statusCode: 311, statusMessage: "일간 날씨 조회 실패" });
+         else res.send({ statusCode: 310, statusMessage: "일간 날씨 조회 성공", payload: weather });
          logger.info("handle_weather_request" + runtime.end());
      }
    
@@ -111,8 +111,8 @@ function get_weather(locate) {
          logger.error(error);
      }
      finally {
-         if (!weather) res.send({ statusCode: 300, statusMessage: "데이터 전송 실패" });
-         else res.send({ statusCode: 301, statusMessage: "데이터 전송 성공", payload: weather });
+         if (!weather) res.send({ statusCode: 313, statusMessage: "주간 날씨 조회 실패" });
+         else res.send({ statusCode: 312, statusMessage: "주간 날씨 조회 성공", payload: weather });
          logger.info("handle_weather_request" + runtime.end());
      }
 }

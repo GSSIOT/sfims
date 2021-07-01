@@ -27,7 +27,7 @@ async function handle_id_change_request(req, res, next) {
     runtime.start();
 
     if(!check_param(name, phone)) {
-        res.send({statusCode : 101, statusMessage : "요청 파라미터 잘못됨"});
+        res.send({statusCode : 241, statusMessage : "요청 형식 오류"});
         logger.info("ram.handle_id_change_request" + runtime.end());
         return;
     }
@@ -39,8 +39,8 @@ async function handle_id_change_request(req, res, next) {
         logger.info(error);
     }
     finally {
-        if(result)  res.send({statusCode : 100, statusMessage : "아이디 찾기 성공", payload : result});
-        else        res.send({statusCode : 101, statusMessage : "아이디 찾기 실패"});
+        if(result)  res.send({statusCode : 240, statusMessage : "아이디 찾기 성공", payload : result});
+        else        res.send({statusCode : 242, statusMessage : "DB 조회 실패"});
         logger.info("ram.handle_id_change_request" + runtime.end());
     }
 }

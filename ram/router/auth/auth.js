@@ -17,9 +17,9 @@ function jwtAuthentication(req, res, next) {
         
         runtime.start();
 
-        if(error)       res.json(statusGen(0  , "server error"));
-        else if(!user)  res.json(statusGen(201, "authentication failed"));
-        else            res.json(statusGen(202, "authentication success"));
+        if(error)       res.json(statusGen(205  , "서버 오류"));
+        else if(!user)  res.json(statusGen(201, "비인가 JWT"));
+        else            res.json(statusGen(200, "JWT 인증 성공"));
         
         logger.info("ram.jwt_authentication" + runtime.end());
 

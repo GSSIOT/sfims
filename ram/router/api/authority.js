@@ -27,12 +27,12 @@ const passport    = require("passport");
         console.log(farmId, farmId1, farmId2, !check_param(farmId));
 
         if(error) {
-            res.json(statusGen(0  , "server error"));
+            res.json(statusGen(302, "서버 오류"));
             return;
         }    
 
         if(!user) {
-            res.json(statusGen(201, "authentication failed"));
+            res.json(statusGen(303, "비인증 토큰"));
             return;
         }
 
@@ -41,13 +41,18 @@ const passport    = require("passport");
                 if(check_param(farmId)) {
                     authority = await dbm.check_user_authority(user["USER_ID"], farmId);
                 }
+                else {
+                    res.json(statusGen(304, "요청 형식 오류"));
+                    logger.info("ram.handle_authority_request" + runtime.end());
+                    return;
+                }
             }
             catch(error) {
                 logger.error(error);
             }
             finally {
                 if(authority)  next();
-                else           res.send(statusGen(500, "권한 없음"));
+                else           res.send(statusGen(305, "권한 없음"));
                 logger.info("ram.handle_authority_request" + runtime.end());
             }
         }
@@ -57,13 +62,18 @@ const passport    = require("passport");
                 if(check_param(farmId1, farmId2)) {
                     authority = await dbm.check_user_authority(user["USER_ID"], farmId1) & await dbm.check_user_authority(user["USER_ID"], farmId2);
                 }
+                else {
+                    res.json(statusGen(304, "요청 형식 오류"));
+                    logger.info("ram.handle._authority_request" + runtime.end());
+                    return;
+                }
             }
             catch(error) {
                 logger.error(error);
             }
             finally {
                 if(authority)  next();
-                else           res.send(statusGen(500, "권한 없음"));
+                else           res.send(statusGen(305, "권한 없음"));
                 logger.info("ram.handle_authority_request" + runtime.end());
             }
         }
@@ -81,12 +91,12 @@ async function authority_manipulation_request(req, res, next) {
         runtime.start();
         
         if(error) {
-            res.json(statusGen(0  , "server error"));
+            res.json(statusGen(307  , "서버 오류"));
             return;
         }    
 
         if(!user) {
-            res.json(statusGen(201, "authentication failed"));
+            res.json(statusGen(308, "비인증 토큰"));
             return;
         }
 
@@ -95,7 +105,7 @@ async function authority_manipulation_request(req, res, next) {
         }   
 
         else {
-            res.send({statusCode : 000, statusMessage : "권한 없음"});
+            res.send({statusCode : 309, statusMessage : "권한 없음"});
         }
 
         logger.info("ram.authority_manipulation_request" + runtime.end());

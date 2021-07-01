@@ -28,7 +28,7 @@ async function handle_password_change_request(req, res, next) {
     let result = null;
     
     if(!check_param(id, pw)) {
-        res.send({statusCode : 101, statusMessage : "요청 파리미터 잘못됨"});
+        res.send({statusCode : 251, statusMessage : "요청 형식 오류"});
         logger.info("ram.handle_password_change_request" + runtime.end());
         return;
     }
@@ -42,8 +42,8 @@ async function handle_password_change_request(req, res, next) {
         logger.info(error);
     }
     finally {
-        if(result)  res.send({statusCode : 100, statusMessage : "비밀번호 변경 성공"});
-        else        res.send({statusCode : 101, statusMessage : "비밀번호 변경 실패"});
+        if(result)  res.send({statusCode : 250, statusMessage : "비밀번호 변경 성공"});
+        else        res.send({statusCode : 255, statusMessage : "DB 변경 실패"});
         logger.info("ram.handle_password_change_request" + runtime.end());
     }
 }

@@ -25,7 +25,7 @@ const check_param   = require("../../checkparma");
     runtime.start();
 
     if(!check_param(userEmail, userId)) {
-        res.send({statusCode : 230, statusMessage : "요청 파라미터 잘못됨"});
+        res.send({statusCode : 231, statusMessage : "요청 형식 오류"});
         logger.info("ram.handle_email_token_request" + runtime.end());
         return;
     }
@@ -41,7 +41,7 @@ const check_param   = require("../../checkparma");
     try {
         rows = await dbm.check_user_email(userId, userEmail);
         if(!rows) {
-            res.send({statusCode : 101, statusMessage : "등록되지 않은 이메일 사용"});
+            res.send({statusCode : 232, statusMessage : "등록되지 않은 이메일 사용"});
             logger.info("ram.handle_email_token_request" + runtime.end());
             return;
         }
@@ -49,11 +49,11 @@ const check_param   = require("../../checkparma");
         smtpTransport.sendMail(mailOptions, function(error, info) {
             if(!error) {
                 logger.info("ram.smtp.send_mail");
-                res.json(statusGen(230, "email sending success"));
+                res.json(statusGen(230, "이메일 전송 성공"));
             }
             else {
                 logger.error(error);
-                res.json(statusGen(231, "email sending error : " + error.message));
+                res.json(statusGen(233, "이메일 전송 오류 : " + error.message));
             }
         });
     }
@@ -82,7 +82,7 @@ async function handle_email_auth_request(req, res, next) {
     runtime.start();
 
     if(!check_param(userEmail, userToken)) {
-        res.send({statusCode : 005, statusMessage : "요청 파라미터 잘못됨"});
+        res.send({statusCode : 237, statusMessage : "요청 형식 오류"});
         logger.info("ram.handle_email_auth_request" + runtime.end());
         return;
     }
@@ -90,7 +90,7 @@ async function handle_email_auth_request(req, res, next) {
     try {
         rows = await dbm.check_user_email(userId, userEmail)
         if(!rows) {
-            res.send({statusCode : 005, statusMessage : "등록되지 않은 이메일 사용"});
+            res.send({statusCode : 236, statusMessage : "등록되지 않은 이메일 사용"});
             logger.info("ram.handle_email_auth_request" + runtime.end());
             return;
         }
@@ -99,22 +99,22 @@ async function handle_email_auth_request(req, res, next) {
 
             // 비밀번호 변경(비인가 토큰)
             if (error && req.url == "/pw/change") {
-                res.send(statusGen(253, "password change failed because invalid signature"));
+                res.send(statusGen(253, "비인증 토큰"));
                 logger.error(error);
             }
             // 이메일 인증
             if (error && req.url == "/pw/emailauth") {
-                res.send(statusGen(233, "invalid signature!"));
+                res.send(statusGen(235, "비인증 토큰"));
                 logger.error(error);
             }
             // 비밀번호 변경(이메일 주소 다름)
             if (decode && req.url == "/pw/change") {
-                decode.email == userEmail ? next() : res.send(statusGen(254, "password change failed because invalid email"));
+                decode.email == userEmail ? next() : res.send(statusGen(254, "토큰정보와 이메일이 다름"));
                 logger.info("ram.handle_email_auth_request" + runtime.end());
             }
             // 이메일 인증
             if (decode && req.url == "/pw/emailauth") {
-                decode.email == userEmail ? res.send(statusGen(232, "email authentication success")) : res.send(statusGen(234, "invalid email"));
+                decode.email == userEmail ? res.send(statusGen(234, "이메일 인증 성공")) : res.send(statusGen(238, "토큰정보와 이메일이 다름"));
                 logger.info("ram.handle_email_auth_request" + runtime.end());
             }
         });
