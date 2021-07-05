@@ -33,6 +33,8 @@
     "jsonwebtoken": "^8.5.1",
     "mariadb": "^2.5.3",
     "math": "0.0.3",
+    "moment": "^2.29.1",
+    "moment-holiday": "^1.5.1",
     "node-rtsp-stream": "0.0.9",
     "nodemailer": "^6.5.0",
     "passport": "^0.4.1",

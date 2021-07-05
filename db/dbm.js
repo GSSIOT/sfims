@@ -3,6 +3,7 @@ const config   = require("./config");
 const math     = require("math");
 const {logger} = require("../server/winston");
 const runtime  = require("../server/runtime");
+const { Console } = require("winston/lib/winston/transports");
 
 
 
@@ -28,6 +29,7 @@ dbm.prototype.init = async function () {
     try {
         this.pool = mariadb.createPool(config);
         this.conn = await this.pool.getConnection();
+        console.log("DATABASE NAME : ",config.database);
     }
     catch(error) {
         logger.error(error);

@@ -148,7 +148,7 @@ const {authority_env_request ,authority_manipulation_request} = require("./autho
     }
  
     try {
-        if(farmID > 0)  rows = await dbm.select(`SELECT * FROM ENVDAYAVG WHERE FARM_ID = '${farmId}' AND DATE >= '${startDate}' AND DATE <= '${endDate}'`);
+        if(farmId > 0)  rows = await dbm.select(`SELECT * FROM ENVDAYAVG WHERE FARM_ID = '${farmId}' AND DATE >= '${startDate}' AND DATE <= '${endDate}'`);
         else            rows = await dbm.select(`SELECT * FROM ENVDAYAVG WHERE DATE >= '${startDate}' AND DATE <= '${endDate}'`);
     }
     catch(error) {
