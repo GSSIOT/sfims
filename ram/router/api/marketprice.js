@@ -7,7 +7,7 @@ const runtime  = require("../../../server/runtime");
 const check_param = require("../../checkparma");
 const router   = express.Router();
 const moment   = require("moment");
-const convert  = require("xml-js")
+const convert  = require("fast-xml-parser")
 
 
 /**
@@ -16,9 +16,6 @@ const convert  = require("xml-js")
  * @returns 
  */
 function get_market_price(date, cropCode, marketCode) {
-
-
-    console.log(date, cropCode, marketCode);
 
     return new Promise((resolve, reject) => {
 
@@ -30,9 +27,22 @@ function get_market_price(date, cropCode, marketCode) {
         };
 
         request(payload, function(error, response, body) {
-            logger.info("ram.get_market_price.request");
-            if(error)  reject(errorGen(error, "[collect] market-price api request error"));
-            else       resolve(convert.xml2js(body));
+
+            let returnValue = null;
+
+            try{
+                returnValue = convert.parse(body).response.body.items.item;
+            }
+
+            catch(err) {
+                logger.error("ram.get_market_price.request" + error);
+            }
+
+            finally {
+                if(error)  reject(errorGen(error, "[collect] market-price api request error"));
+                else       resolve(returnValue);
+                logger.info("ram.get_market_price.request");
+            }
         }); 
 
         logger.info("ram.get_market_price" + runtime.end());
