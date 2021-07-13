@@ -42,6 +42,33 @@ CREATE TABLE ENVINFOTABLE (
     E_CURRENT       VARCHAR(20)
 );
 
+CREATE TABLE ENVINFOTABLE (
+
+    DATE            VARCHAR(20),
+    TIME            VARCHAR(20),
+    FARM_ID         VARCHAR(20),
+    TEMP            VARCHAR(20),
+    HUMID           VARCHAR(20),
+    DEWPOINT        VARCHAR(20),
+    RAIN            VARCHAR(20),
+    FLOW            VARCHAR(20),
+    RAIN_GAUGE      VARCHAR(20),
+    ACTINO          VARCHAR(20),
+    WINDDIR         VARCHAR(20),
+    WINDSPEED       VARCHAR(20),
+    VOLTAGE         VARCHAR(20),
+    CO2             VARCHAR(20),
+    EC              VARCHAR(20),
+    SOIL_HUM        VARCHAR(20),
+    MOTION          VARCHAR(20),
+    SMOKE           VARCHAR(20),
+    GAS             VARCHAR(20),
+    BRIGHT          VARCHAR(20),
+    DOOR            VARCHAR(20),
+    REMOTE          VARCHAR(20),
+    E_CURRENT       VARCHAR(20)
+);
+
 CREATE TABLE SENSORINFOTABLE (
 
     SENSOR_ID       VARCHAR(20),

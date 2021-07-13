@@ -12,7 +12,7 @@ const router  = express.Router();
  router.post("/pw/*", require("./api/hmac"), require("./find/pw"));
  router.post("/join", require("./api/hmac"), require("./join/join"));
  router.post("/weather/*", require("./api/hmac"), require("./api/weather"));
- router.post("/market-price", /*require("./api/hmac"),*/ require("./api/marketprice"));
+ router.post("/market-price", require("./api/hmac"), require("./api/marketprice"));
  
 
 module.exports = router;

@@ -78,7 +78,7 @@ const {authority_env_request ,authority_manipulation_request} = require("./autho
     }
  
     try {
-        rows = await dbm.select(`SELECT FARM_ID, DATE, TIME ,${sensorType} FROM ENVDAYAVG WHERE (FARM_ID = '${farmId1}' OR FARM_ID = '${farmId2}') AND DATE >= '${startDate}' AND DATE <= '${endDate}'`);
+        rows = await dbm.select(`SELECT FARM_ID, DATE, ${sensorType} FROM ENVDAYAVG WHERE (FARM_ID = '${farmId1}' OR FARM_ID = '${farmId2}') AND DATE >= '${startDate}' AND DATE <= '${endDate}'`);
     }
     catch(error) {
         logger.error(error);
@@ -131,7 +131,7 @@ const {authority_env_request ,authority_manipulation_request} = require("./autho
  * @abstract
  * @param {*} req 
  * @param {*} res 
- * @param {*} next 
+ * @param {*} next  
  */
  async function handle_env_avg_day_request(req, res, next) {
     
@@ -184,7 +184,7 @@ const {authority_env_request ,authority_manipulation_request} = require("./autho
     }
  
     try {
-        rows = await dbm.select(`SELECT DATE, TIME, ${sensorType} FROM ENVWEEKAVG WHERE FARM_ID = '${farmId}' AND DATE >= '${startDate}' AND DATE <= '${endDate}'`);
+        rows = await dbm.select(`SELECT DATE ${sensorType} FROM ENVWEEKAVG WHERE FARM_ID = '${farmId}' AND DATE >= '${startDate}' AND DATE <= '${endDate}'`);
     }
     catch(error) {
         logger.error(error);
@@ -220,7 +220,7 @@ const {authority_env_request ,authority_manipulation_request} = require("./autho
     }
  
     try {
-        rows = await dbm.select(`SELECT DATE, TIME, ${sensorType} FROM ENVMONTHAVG WHERE FARM_ID = '${farmId}' AND DATE >= '${startDate}' AND DATE <= '${endDate}'`);
+        rows = await dbm.select(`SELECT DATE ${sensorType} FROM ENVMONTHAVG WHERE FARM_ID = '${farmId}' AND DATE >= '${startDate}' AND DATE <= '${endDate}'`);
     }
     catch(error) {
         logger.error(error);
@@ -679,6 +679,7 @@ async function handle_user_request(req, res, next) {
     }
 
     try {
+        rows = await dbm.insert(`INSERT INTO SECTORINFOTABLE VALUES(?,?)`, farmId,)
         rows = await dbm.insert(`INSERT INTO GROWTHINFOTABLE VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)`, [0 ,date[0], date[1], farmId, cropType, sectorId, cropLeafLong, cropLeafCnt, cropFruitWeight, cropFruitWidth, cropFruitHeight, cropFruitSugar, cropFruitAcid]);
         console.log(rows, date);
     }

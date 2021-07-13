@@ -17,7 +17,7 @@ function message_authentication(req, res, next) {
     runtime.start();
     logger.info("ram.message_authentication" + runtime.end());
 
-    if(!check_param(date, accessKey, signature))  return res.send(statusGen(204, "Request Format Error"));
+    if(!check_param(date, accessKey, signature))  return res.send(statusGen(300, "비인가 요청 메시지"));
     if(hmac.get_signature(method, date, url) == signature) {
         next();
     }

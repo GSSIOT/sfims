@@ -22,7 +22,7 @@ function login(req, res, next) {
         runtime.start();
 
         if(!user) {
-            res.json(statusGen(102, "login failed"));
+            res.json(statusGen(101, "아이디가 없거나 비밀번호가 틀림"));
             logger.info("ram.login_authentication" + runtime.end());
         }
 
@@ -30,7 +30,7 @@ function login(req, res, next) {
             res.json({
                 jwt : _jwt,
                 statusCode : 100,
-                statusMessage : "login success"
+                statusMessage : "로그인 성공"
             });
             logger.info("ram.login_authentication" + runtime.end());
         }

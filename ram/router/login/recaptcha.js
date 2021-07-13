@@ -22,7 +22,7 @@ function recaptcha(req, res, next) {
 
     if(!check_param(_recaptcha)) {
         logger.info("ram.recaptcha.request" + runtime.end());
-        res.send({statusCode : 104, statusMessage : "recaptcha authentication failed"});
+        res.send({statusCode : 106, statusMessage : "요청 형식 오류"});
         return;
     }
 
@@ -44,7 +44,7 @@ function recaptcha(req, res, next) {
         const success = JSON.parse(body)["success"];
 
         if(error)     res.json(statusGen(002, `HTTP ERROR : ${error.message}`));
-        if(!success)  res.json(statusGen(105, "recaptcha authentication failed"));
+        if(!success)  res.json(statusGen(104, "recaptcha 토큰 인증 실패"));
         else          next();
         
     })
