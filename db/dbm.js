@@ -306,4 +306,56 @@ dbm.prototype.check_user_password = async function (userId, userPw) {
         return rows[0]['count'] > 0 ? true : false;
     }
 }
+
+
+
+/**
+ * 
+ * @param {*} userId 
+ * @param {*} userPw 
+ * @returns 
+ */
+ dbm.prototype.get_market_price_market_code_info = async function () {
+
+    let rows = null;
+
+    runtime.start();
+
+    try {
+        rows = await this.select(`SELECT * FROM MPMARKETINFOTABLE`);
+    }
+    catch(error) {
+        logger.error(error);
+    }
+    finally {
+        logger.info("dbm.get_market_price_market_code_info" + runtime.end());
+        return rows;
+    }
+}
+
+
+
+/**
+ * 
+ * @param {*} userId 
+ * @param {*} userPw 
+ * @returns 
+ */
+ dbm.prototype.get_market_price_crop_code_info = async function () {
+
+    let rows = null;
+
+    runtime.start();
+
+    try {
+        rows = await this.select(`SELECT * FROM MPCROPINFOTABLE`);
+    }
+    catch(error) {
+        logger.error(error);
+    }
+    finally {
+        logger.info("dbm.get_market_price_crop_code_info" + runtime.end());
+        return rows;
+    }
+}
 module.exports = new dbm();

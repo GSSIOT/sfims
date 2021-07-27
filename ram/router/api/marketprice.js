@@ -7,7 +7,8 @@ const runtime  = require("../../../server/runtime");
 const check_param = require("../../checkparma");
 const router   = express.Router();
 const moment   = require("moment");
-const convert  = require("fast-xml-parser")
+const convert  = require("fast-xml-parser");
+const dbm = require("../../../db/dbm");
 
 
 /**
@@ -50,6 +51,26 @@ function get_market_price(date, cropCode, marketCode) {
 }
 
 
+// 마켓 코드, 작물 코드 보내줌
+async function handle_get_market_price_info_request(req, res, next) {
+
+    let resultCrop   = null;
+    let resultMarket = null;
+
+    try {
+        resultCrop   = await dbm.get_market_price_crop_code_info();
+        resultMarket = await dbm.get_market_price_market_code_info();
+    }
+    catch(error) {
+        console.log(error);
+    }
+    finally {
+        if(resultCrop && resultMarket)  res.send({ statusCode : 373, statusMessage : "경락 시세 정보 조회 성공", payload : {resultMarket, resultCrop} });
+        else                            res.send({ statusCode : 374, statusMessage : "경락 시세 정보 조회 실패"});
+    }
+}
+
+
 
 /**
  * @abstract
@@ -88,5 +109,6 @@ function get_market_price(date, cropCode, marketCode) {
 }
 
 
+router.post("/market-price/info", handle_get_market_price_info_request);
 router.post("/market-price", handle_market_price_request);
 module.exports = router

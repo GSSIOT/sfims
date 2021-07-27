@@ -9,7 +9,7 @@ const check_param = require("../../checkparma");
 function message_authentication(req, res, next) {
 
     let method    = req.method;
-    let url       = `${process.env.SVR_HOST}${req.url}`;
+    let url       = `${process.env.HMAC_URL}${req.url}`;
     let date      = req.headers['x-date'];
     let accessKey = req.headers['x-accesskey'];
     let signature = req.headers['x-signature'];
