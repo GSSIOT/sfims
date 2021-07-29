@@ -82,7 +82,7 @@ async function handle_get_market_price_info_request(req, res, next) {
 
     let cropCode   = req.body.crop_code;
     let marketCode = req.body.market_code;
-    let date       = null;
+    let date       = moment().add(-1, 'days').format('YYYYMMDD');
     let result     = null;
     
     runtime.start();
@@ -110,5 +110,5 @@ async function handle_get_market_price_info_request(req, res, next) {
 
 
 router.post("/market-price/info", handle_get_market_price_info_request);
-router.post("/market-price", handle_market_price_request);
+router.post("/market-price/price", handle_market_price_request);
 module.exports = router
