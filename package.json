@@ -36,6 +36,7 @@
     "math": "0.0.3",
     "moment": "^2.29.1",
     "moment-holiday": "^1.5.1",
+    "mosca": "^2.8.3",
     "node-rtsp-stream": "0.0.9",
     "nodemailer": "^6.5.0",
     "passport": "^0.4.1",

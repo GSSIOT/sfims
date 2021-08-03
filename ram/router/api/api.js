@@ -730,7 +730,6 @@ async function handle_user_request(req, res, next) {
 }
 
 
-
 router.post("/api/env/sts-day", handle_env_sts_request);
 router.post("/api/env/compare-hour", authority_env_request, handle_env_compare_hour_request);
 router.post("/api/env/compare-day", authority_env_request, handle_env_compare_day_request);
