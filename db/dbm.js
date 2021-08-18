@@ -35,7 +35,7 @@ dbm.prototype.init = async function () {
         logger.error(error);
     }
     finally {
-        this.conn.release();
+        await this.conn.release();
         logger.info("dbm.init" + runtime.end());
     }
 }
@@ -85,7 +85,7 @@ dbm.prototype.insert = async function (query, value) {
         logger.error(error.message);
     }
     finally {
-        this.conn.release();
+        await this.conn.release();
         logger.info("dbm.insert" + runtime.end());    
         if(result)  return true;
         else        return false;
@@ -113,7 +113,7 @@ dbm.prototype.delete = async function (query) {
         logger.error(error);
     }
     finally {
-        this.conn.release();
+        await this.conn.release();
         logger.info("dbm.delete" + runtime.end());
         if(result)  return true;
         else        return false;
@@ -141,7 +141,7 @@ dbm.prototype.update = async function (query, value) {
         logger.error(error);
     }
     finally {
-        this.conn.release();
+        await this.conn.release();
         logger.info("dbm.update" + runtime.end());
         if(result)  return true;
         else        return false;
@@ -169,7 +169,7 @@ dbm.prototype.select = async function (query) {
         logger.error(error);
     }
     finally {
-        this.conn.release();
+        await this.conn.release();
         logger.info("dbm.select" + runtime.end());
         return result;
     }
